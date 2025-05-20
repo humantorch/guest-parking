@@ -8,9 +8,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 
 const TOTAL_SPOTS = 7;
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
-console.log('🔍 Backend URL:', process.env.REACT_APP_BACKEND_URL);
+console.log('🔍 Backend URL:', import.meta.env.VITE_REACT_APP_BACKEND_URL);
 
 export default function GuestParkingBookingApp() {
   const [selectedWeekend, setSelectedWeekend] = useState(new Date());
