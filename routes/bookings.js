@@ -1,7 +1,11 @@
 const express = require('express');
 const pool = require('../db');
 const router = express.Router();
-import { Resend } from 'resend';
+const { Resend } = require('resend');
+
+
+// Initialize Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Get available spots for a weekend
 router.get('/availability', async (req, res) => {
@@ -48,7 +52,6 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-
 // Book a spot
 router.post('/', async (req, res) => {
   const {
@@ -65,8 +68,28 @@ router.post('/', async (req, res) => {
       [weekend_start, spot_number, first_name, last_name, unit_number, email, guest_name, vehicle_type, license_plate]
     );
 
+    // Send confirmation email
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM,
+      to: email,
+      subject: 'Guest Parking Booking Confirmation',
+      html: `
+        <p>Hi ${first_name},</p>
+        <p>Your guest parking booking has been confirmed for the weekend starting <strong>${weekend_start}</strong>.</p>
+        <ul>
+          <li><strong>Spot:</strong> ${spot_number}</li>
+          <li><strong>Guest:</strong> ${guest_name}</li>
+          <li><strong>Vehicle:</strong> ${vehicle_type}</li>
+          <li><strong>License Plate:</strong> ${license_plate}</li>
+        </ul>
+        <p>Please call the superintendent if you need to cancel a booking.</p>
+        <p>Thanks,<br><em>The Admiralty Place Parking Team</em></p>
+      `
+    });
+
     res.status(201).json({ message: 'Booking confirmed' });
   } catch (err) {
+    console.error('Booking error:', err);
     if (err.code === '23505') {
       res.status(409).json({ error: 'Spot already booked' });
     } else {
