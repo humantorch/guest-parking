@@ -30,12 +30,13 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
             export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=${{ secrets.AWS_REGION }}
+            export AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}
 
             sudo yum install -y unzip nodejs npm aws-cli
 
@@ -49,3 +50,4 @@ jobs:
 
             fuser -k 3000/tcp || true
             nohup node index.js > out.log 2>&1 &
+
