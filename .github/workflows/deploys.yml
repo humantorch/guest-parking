@@ -40,12 +40,12 @@ jobs:
 
             sudo yum install -y unzip nodejs npm aws-cli
 
-            rm -rf backend.zip backend
+            rm -rf backend.zip guest-parking-backend
 
             aws s3 cp s3://$AWS_S3_BUCKET/deployments/latest/backend.zip backend.zip --region $AWS_REGION
 
-            unzip -o backend.zip -d backend
-            cd backend
+            unzip -o backend.zip -d guest-parking-backend
+            cd guest-parking-backend
             npm install
 
             fuser -k 3000/tcp || true
