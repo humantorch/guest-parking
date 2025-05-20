@@ -15,11 +15,12 @@ jobs:
       - name: Zip backend and upload to S3
         run: |
           zip -r backend.zip . -x "*.git*" "node_modules/*"
-          aws s3 cp backend.zip s3://guest-parking-deployments/deployments/latest/backend.zip
+          aws s3 cp backend.zip s3://$AWS_S3_BUCKET/deployments/latest/backend.zip --region $AWS_REGION
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
 
       - name: Deploy via SSH to EC2
         uses: appleboy/ssh-action@v1.0.0
@@ -28,22 +29,27 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Install dependencies (if not already installed)
+            # Install dependencies
             sudo yum install -y unzip nodejs npm aws-cli
 
             # Clean up old files
             rm -rf backend.zip backend
 
             # Download from S3
-            aws s3 cp s3://your-bucket-name/deployments/latest/backend.zip backend.zip
+            aws s3 cp s3://$AWS_S3_BUCKET/deployments/latest/backend.zip backend.zip --region $AWS_REGION
 
             # Extract and install
             unzip -o backend.zip -d backend
             cd backend
             npm install
 
-            # Kill any existing process on port 3000
-            pkill -f "node index.js" || true
+            # Kill existing server on port 3000
+            fuser -k 3000/tcp || true
 
             # Start the app
             nohup node index.js > out.log 2>&1 &
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
