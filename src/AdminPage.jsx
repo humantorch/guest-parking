@@ -12,8 +12,8 @@ function formatWeekendRange(dateStr) {
 }
 
 
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'letmein';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const ADMIN_PASSWORD = import.meta.env.VITE_REACT_APP_ADMIN_PASSWORD;
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
 export default function AdminPage() {
   const [password, setPassword] = useState('');
