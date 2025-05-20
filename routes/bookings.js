@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db');
 const router = express.Router();
+import { Resend } from 'resend';
 
 // Get available spots for a weekend
 router.get('/availability', async (req, res) => {
