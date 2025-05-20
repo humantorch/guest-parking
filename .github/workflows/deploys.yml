@@ -15,7 +15,7 @@ jobs:
       - name: Zip backend and upload to S3
         run: |
           zip -r backend.zip . -x "*.git*" "node_modules/*"
-          aws s3 cp backend.zip s3://your-bucket-name/deployments/latest/backend.zip
+          aws s3 cp backend.zip s3://guest-parking-deployments/deployments/latest/backend.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
