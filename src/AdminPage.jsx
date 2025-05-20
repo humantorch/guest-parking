@@ -4,6 +4,7 @@ import { Button } from './components/ui/button';
 import { Card, CardContent } from './components/ui/card';
 import { format, addDays, parseISO } from 'date-fns';
 import toast, { Toaster } from 'react-hot-toast';
+import 'react-hot-toast/dist/index.css'; // <-- ensure this is loaded once in your app
 
 function formatWeekendRange(dateStr) {
   const friday = parseISO(dateStr);
@@ -51,13 +52,17 @@ export default function AdminPage() {
       const res = await fetch(`${API_BASE_URL}/api/bookings/${id}`, {
         method: 'DELETE',
       });
+
       if (res.ok) {
-        await fetchBookings(); // refresh list
+        toast.success('Booking deleted');
+        setBookings((prev) => prev.filter((b) => b.id !== id));
       } else {
-        console.error('Failed to delete booking');
+        const errData = await res.json();
+        toast.error(errData.error || 'Failed to delete booking');
       }
     } catch (err) {
-      console.error('Error deleting booking:', err);
+      console.error('Delete error:', err);
+      toast.error('Error deleting booking');
     }
   };
 
@@ -94,32 +99,6 @@ export default function AdminPage() {
         bookings.map((booking) => (
           <Card key={booking.id} className="mb-4">
             <CardContent className="space-y-2">
-              <Button
-                variant="destructive"
-                onClick={async () => {
-                  const confirm = window.confirm('Are you sure you want to delete this booking?');
-                  if (!confirm) return;
-
-                  try {
-                    const res = await fetch(`${API_BASE_URL}/api/bookings/${booking.id}`, {
-                      method: 'DELETE',
-                    });
-
-                    if (res.ok) {
-                      toast.success('Booking deleted');
-                      setBookings((prev) => prev.filter((b) => b.id !== booking.id));
-                    } else {
-                      const errData = await res.json();
-                      toast.error(errData.error || 'Failed to delete booking');
-                    }
-                  } catch (err) {
-                    console.error('Delete error:', err);
-                    toast.error('Error deleting booking');
-                  }
-                }}
-              >
-                Delete
-              </Button>
               <p className="text-sm text-gray-600">
                 <strong>Weekend:</strong> {formatWeekendRange(booking.weekend_start)}
               </p>
