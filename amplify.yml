@@ -10,7 +10,7 @@ frontend:
         - echo "REACT_APP_BACKEND_URL is $REACT_APP_BACKEND_URL"
         - npm run build
   artifacts:
-    baseDirectory: build
+    baseDirectory: dist
     files:
       - '**/*'
   cache:
