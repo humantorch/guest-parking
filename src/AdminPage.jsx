@@ -4,7 +4,6 @@ import { Button } from './components/ui/button';
 import { Card, CardContent } from './components/ui/card';
 import { format, addDays, parseISO } from 'date-fns';
 import toast, { Toaster } from 'react-hot-toast';
-import 'react-hot-toast/dist/index.css'; // <-- ensure this is loaded once in your app
 
 function formatWeekendRange(dateStr) {
   const friday = parseISO(dateStr);
