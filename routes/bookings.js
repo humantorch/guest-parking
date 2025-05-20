@@ -19,7 +19,6 @@ router.get('/availability', async (req, res) => {
   }
 });
 
-// Get all bookings
 // Get all bookings (for admin)
 router.get('/', async (req, res) => {
   try {
@@ -30,6 +29,21 @@ router.get('/', async (req, res) => {
   } catch (err) {
     console.error('Error fetching all bookings:', err);
     res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// DELETE /api/bookings/:id
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM bookings WHERE id = $1', [id]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+    res.json({ message: 'Booking deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting booking:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
