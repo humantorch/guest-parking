@@ -1,16 +1,15 @@
-// AdminPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Input } from './components/ui/input';
 import { Button } from './components/ui/button';
 import { Card, CardContent } from './components/ui/card';
 import { format, addDays, parseISO } from 'date-fns';
+import toast, { Toaster } from 'react-hot-toast';
 
 function formatWeekendRange(dateStr) {
   const friday = parseISO(dateStr);
   const monday = addDays(friday, 3);
   return `${format(friday, 'MMM d')} – ${format(monday, 'MMM d, yyyy')}`;
 }
-
 
 const ADMIN_PASSWORD = import.meta.env.VITE_REACT_APP_ADMIN_PASSWORD;
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -30,22 +29,42 @@ export default function AdminPage() {
     }
   };
 
-  useEffect(() => {
-    if (!authenticated) return;
-    const fetchBookings = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/bookings`);
-        const data = await res.json();
-        if (res.ok) {
-          setBookings(data.bookings || []);
-        } else {
-          console.error(data.error);
-        }
-      } catch (err) {
-        console.error('Error fetching bookings:', err);
+  const fetchBookings = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/bookings`);
+      const data = await res.json();
+      if (res.ok) {
+        setBookings(data.bookings || []);
+      } else {
+        console.error(data.error);
       }
-    };
-    fetchBookings();
+    } catch (err) {
+      console.error('Error fetching bookings:', err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm('Are you sure you want to delete this booking?');
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/bookings/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        await fetchBookings(); // refresh list
+      } else {
+        console.error('Failed to delete booking');
+      }
+    } catch (err) {
+      console.error('Error deleting booking:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (authenticated) {
+      fetchBookings();
+    }
   }, [authenticated]);
 
   if (!authenticated) {
@@ -67,40 +86,64 @@ export default function AdminPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
+      <Toaster position="top-center" />
       <h1 className="text-2xl font-bold mb-4">All Bookings</h1>
       {bookings.length === 0 ? (
         <p>No bookings found.</p>
       ) : (
-        bookings.map((booking, idx) => (
-          <Card key={idx} className="mb-4">
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-2">
+        bookings.map((booking) => (
+          <Card key={booking.id} className="mb-4">
+            <CardContent className="space-y-2">
+              <Button
+                variant="destructive"
+                onClick={async () => {
+                  const confirm = window.confirm('Are you sure you want to delete this booking?');
+                  if (!confirm) return;
+
+                  try {
+                    const res = await fetch(`${API_BASE_URL}/api/bookings/${booking.id}`, {
+                      method: 'DELETE',
+                    });
+
+                    if (res.ok) {
+                      toast.success('Booking deleted');
+                      setBookings((prev) => prev.filter((b) => b.id !== booking.id));
+                    } else {
+                      const errData = await res.json();
+                      toast.error(errData.error || 'Failed to delete booking');
+                    }
+                  } catch (err) {
+                    console.error('Delete error:', err);
+                    toast.error('Error deleting booking');
+                  }
+                }}
+              >
+                Delete
+              </Button>
+              <p className="text-sm text-gray-600">
                 <strong>Weekend:</strong> {formatWeekendRange(booking.weekend_start)}
               </p>
-
-              <Card key={idx} className="mb-4">
-                <CardContent className="space-y-2">
-                  <p className="text-sm text-gray-600">
-                    <strong>Spot:</strong> {booking.spot_number}
-                  </p>
-                  <p>
-                    <strong>Resident:</strong> {booking.first_name} {booking.last_name} (Unit {booking.unit_number})
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {booking.email}
-                  </p>
-                  <p>
-                    <strong>Guest:</strong> {booking.guest_name}
-                  </p>
-                  <p>
-                    <strong>Vehicle:</strong> {booking.vehicle_type}
-                  </p>
-                  <p>
-                    <strong>Plate:</strong> {booking.license_plate}
-                  </p>
-                </CardContent>
-              </Card>
-
+              <p>
+                <strong>Spot:</strong> {booking.spot_number}
+              </p>
+              <p>
+                <strong>Resident:</strong> {booking.first_name} {booking.last_name} (Unit {booking.unit_number})
+              </p>
+              <p>
+                <strong>Email:</strong> {booking.email}
+              </p>
+              <p>
+                <strong>Guest:</strong> {booking.guest_name}
+              </p>
+              <p>
+                <strong>Vehicle:</strong> {booking.vehicle_type}
+              </p>
+              <p>
+                <strong>Plate:</strong> {booking.license_plate}
+              </p>
+              <Button variant="destructive" onClick={() => handleDelete(booking.id)}>
+                Delete Booking
+              </Button>
             </CardContent>
           </Card>
         ))
