@@ -7,6 +7,23 @@ const { Resend } = require('resend');
 // Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// temp email test
+router.get('/test-email', async (req, res) => {
+  try {
+    const response = await resend.emails.send({
+      from: process.env.FROM_EMAIL,
+      to: 'kosman.scott@gmail.com',
+      subject: 'Test email',
+      html: '<p>This is a test from your local environment</p>',
+    });
+    console.log('Email sent:', response);
+    res.send('Email sent!');
+  } catch (error) {
+    console.error('Email error:', error);
+    res.status(500).send('Failed to send email');
+  }
+});
+
 // Get available spots for a weekend
 router.get('/availability', async (req, res) => {
   const { weekend } = req.query;
@@ -59,6 +76,8 @@ router.post('/', async (req, res) => {
     unit_number, email, guest_name, vehicle_type, license_plate
   } = req.body;
 
+  const floor = spot_number <= 4 ? " (P1)" : " (P2)";
+
   try {
     await pool.query(
       `INSERT INTO bookings (
@@ -70,14 +89,14 @@ router.post('/', async (req, res) => {
 
     // Send confirmation email
     await resend.emails.send({
-      from: process.env.EMAIL_FROM,
+      from: process.env.FROM_EMAIL,
       to: email,
       subject: 'Guest Parking Booking Confirmation',
       html: `
         <p>Hi ${first_name},</p>
         <p>Your guest parking booking has been confirmed for the weekend starting <strong>${weekend_start}</strong>.</p>
         <ul>
-          <li><strong>Spot:</strong> ${spot_number}</li>
+          <li><strong>Spot:</strong> ${spot_number} ${floor}</li>
           <li><strong>Guest:</strong> ${guest_name}</li>
           <li><strong>Vehicle:</strong> ${vehicle_type}</li>
           <li><strong>License Plate:</strong> ${license_plate}</li>
