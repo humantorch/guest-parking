@@ -10,8 +10,17 @@ import 'react-datepicker/dist/react-datepicker.css';
 const TOTAL_SPOTS = 7;
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
+function getNextFriday() {
+  const date = new Date();
+  const day = date.getDay(); // 0 = Sunday, 5 = Friday
+  const daysUntilFriday = (5 - day + 7) % 7 || 7;
+  date.setDate(date.getDate() + daysUntilFriday);
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+
 export default function GuestParkingBookingApp() {
-  const [selectedWeekend, setSelectedWeekend] = useState(new Date());
+  const [selectedWeekend, setSelectedWeekend] = useState(getNextFriday());
   const [availableSpots, setAvailableSpots] = useState([]);
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [formData, setFormData] = useState({
