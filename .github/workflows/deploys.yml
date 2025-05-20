@@ -46,6 +46,10 @@ jobs:
 
             unzip -o backend.zip -d guest-parking-backend
             cd guest-parking-backend
+
+            echo "PORT=${{ secrets.PORT }}" > .env
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL}}" >> .env
+            
             npm install
 
             fuser -k 3000/tcp || true
