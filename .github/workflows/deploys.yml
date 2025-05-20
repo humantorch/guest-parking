@@ -2,42 +2,48 @@ name: Deploy Backend to EC2
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Zip source
-        run: zip -r backend.zip . -x "*.git*"
-
-      - name: Upload to S3
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --exact-timestamps
+      - name: Zip backend and upload to S3
+        run: |
+          zip -r backend.zip . -x "*.git*" "node_modules/*"
+          aws s3 cp backend.zip s3://your-bucket-name/deployments/latest/backend.zip
         env:
-          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SOURCE_DIR: "./"
-          DEST_DIR: "deployments/latest"
+          AWS_REGION: us-east-1
 
-      - name: Deploy via SSH
+      - name: Deploy via SSH to EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo apt update
-            sudo apt install unzip nodejs npm -y
-            aws s3 cp s3://${{ secrets.S3_BUCKET }}/deployments/latest/backend.zip backend.zip
+            # Install dependencies (if not already installed)
+            sudo yum install -y unzip nodejs npm aws-cli
+
+            # Clean up old files
+            rm -rf backend.zip backend
+
+            # Download from S3
+            aws s3 cp s3://your-bucket-name/deployments/latest/backend.zip backend.zip
+
+            # Extract and install
             unzip -o backend.zip -d backend
             cd backend
             npm install
-            PORT=3000 nohup node index.js > out.log 2>&1 &
+
+            # Kill any existing process on port 3000
+            pkill -f "node index.js" || true
+
+            # Start the app
+            nohup node index.js > out.log 2>&1 &
