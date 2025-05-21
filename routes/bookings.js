@@ -8,21 +8,21 @@ const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // temp email test
-router.get('/test-email', async (req, res) => {
-  try {
-    const response = await resend.emails.send({
-      from: process.env.FROM_EMAIL,
-      to: 'kosman.scott@gmail.com',
-      subject: 'Test email',
-      html: '<p>This is a test from your local environment</p>',
-    });
-    console.log('Email sent:', response);
-    res.send('Email sent!');
-  } catch (error) {
-    console.error('Email error:', error);
-    res.status(500).send('Failed to send email');
-  }
-});
+// router.get('/test-email', async (req, res) => {
+//   try {
+//     const response = await resend.emails.send({
+//       from: process.env.FROM_EMAIL,
+//       to: 'kosman.scott@gmail.com',
+//       subject: 'Test email',
+//       html: '<p>This is a test from your local environment</p>',
+//     });
+//     console.log('Email sent:', response);
+//     res.send('Email sent!');
+//   } catch (error) {
+//     console.error('Email error:', error);
+//     res.status(500).send('Failed to send email');
+//   }
+// });
 
 // Get available spots for a weekend
 router.get('/availability', async (req, res) => {

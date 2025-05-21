@@ -49,9 +49,12 @@ jobs:
 
             echo "PORT=${{ secrets.PORT }}" > .env
             echo "DATABASE_URL=${{ secrets.DATABASE_URL}}" >> .env
+            echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .env
+            echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env
+            echo "ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}" >> .env
             
             npm install
 
-            fuser -k 3000/tcp || true
-            nohup node index.js > out.log 2>&1 &
+            sudo systemctl daemon-reload
+            sudo systemctl restart guest-parking-backend
 
