@@ -1,60 +1,38 @@
-name: Deploy Backend to EC2
+name: Deploy Backend to Lambda
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    env:
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Zip backend and upload to S3
-        run: |
-          zip -r backend.zip . -x "*.git*" "node_modules/*"
-          aws s3 cp backend.zip s3://$AWS_S3_BUCKET/deployments/latest/backend.zip --region $AWS_REGION
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-
-      - name: Deploy via SSH to EC2
-        uses: appleboy/ssh-action@v1.0.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          script: |
-            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            export AWS_REGION=${{ secrets.AWS_REGION }}
-            export AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}
+          node-version: '18'
 
-            sudo yum install -y unzip nodejs npm aws-cli
+      - name: Install dependencies
+        run: npm ci
 
-            rm -rf backend.zip guest-parking-backend
+      - name: Zip Lambda function
+        run: zip -r backend.zip . -x "*.git*" "node_modules/*" ".github/*" "terraform/*"
 
-            aws s3 cp s3://$AWS_S3_BUCKET/deployments/latest/backend.zip backend.zip --region $AWS_REGION
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-            unzip -o backend.zip -d guest-parking-backend
-            cd guest-parking-backend
-
-            echo "PORT=${{ secrets.PORT }}" > .env
-            echo "DATABASE_URL=${{ secrets.DATABASE_URL}}" >> .env
-            echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .env
-            echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env
-            echo "ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}" >> .env
-            
-            npm install
-
-            sudo systemctl daemon-reload
-            sudo systemctl restart guest-parking-backend
-
+      - name: Upload to Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name guest-parking-backend \
+            --zip-file fileb://backend.zip
