@@ -5,6 +5,7 @@ import { Input } from './components/ui/input';
 import { format, addDays, startOfWeek } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const TOTAL_SPOTS = 7;
@@ -60,18 +61,25 @@ export default function GuestParkingBookingApp() {
   };
 
   const handleSubmit = async () => {
-    if (isSubmitting) return; // Guard against double submission
-    if (!selectedSpot) return alert('Please select a spot.');
+    if (!selectedSpot) {
+      toast.error('Please select a spot.');
+      return;
+    }
 
     for (const key in formData) {
-      if (!formData[key]) return alert('Please fill in all required fields.');
+      if (!formData[key]) {
+        toast.error('Please fill in all required fields.');
+        return;
+      }
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      return alert('Please enter a valid email address.');
+      toast.error('Please enter a valid email address.');
+      return;
     }
 
+    setIsSubmitting(true);
     const payload = {
       weekend_start: format(selectedWeekend, 'yyyy-MM-dd'),
       spot_number: selectedSpot,
@@ -84,9 +92,6 @@ export default function GuestParkingBookingApp() {
       license_plate: formData.licensePlate,
     };
 
-    setIsSubmitting(true);
-    setMessage('');
-
     try {
       const res = await fetch(`${API_BASE_URL}/api/bookings`, {
         method: 'POST',
@@ -94,22 +99,29 @@ export default function GuestParkingBookingApp() {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-
       if (res.ok) {
         setBookingConfirmed(true);
-        setMessage(data.message || 'Booking confirmed!');
+        toast.success(data.message || 'Booking confirmed!');
+        setSelectedSpot(null);
+        setFormData({
+          firstName: '',
+          lastName: '',
+          unitNumber: '',
+          email: '',
+          guestName: '',
+          vehicleType: '',
+          licensePlate: '',
+        });
       } else {
-        setMessage(data.error || 'Something went wrong.');
+        toast.error(data.error || 'Something went wrong.');
       }
     } catch (err) {
       console.error(err);
-      setMessage('Failed to connect to server.');
+      toast.error('Failed to connect to server.');
     } finally {
       setIsSubmitting(false);
     }
   };
-
-
 
   const renderWeekend = (date) => {
     const friday = addDays(startOfWeek(date, { weekStartsOn: 1 }), 4);
@@ -119,6 +131,7 @@ export default function GuestParkingBookingApp() {
 
   return (
     <div className="max-w-3xl mx-auto p-4">
+      <Toaster />
       <h1 className="text-2xl font-bold mb-4">Guest Parking Booking</h1>
       <div className="mb-4">
         <label className="block font-medium mb-2">Select Weekend</label>
