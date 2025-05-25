@@ -1,8 +1,19 @@
-// src/components/ui/card.jsx
-export function Card({ children, className = '' }) {
-  return <div className={`rounded-xl shadow p-4 ${className}`}>{children}</div>;
-}
+// components/ui/card.jsx
+import React, { forwardRef } from 'react';
+import clsx from 'clsx';
 
-export function CardContent({ children }) {
-  return <div>{children}</div>;
-}
+export const Card = forwardRef(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={clsx('rounded border bg-white text-black shadow-sm', className)}
+      {...props}
+    />
+  );
+});
+
+export const CardContent = ({ className, ...props }) => {
+  return (
+    <div className={clsx('p-4', className)} {...props} />
+  );
+};
