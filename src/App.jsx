@@ -23,6 +23,7 @@ export default function GuestParkingBookingApp() {
   const [selectedWeekend, setSelectedWeekend] = useState(getNextFriday());
   const [availableSpots, setAvailableSpots] = useState([]);
   const [selectedSpot, setSelectedSpot] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -59,18 +60,13 @@ export default function GuestParkingBookingApp() {
   };
 
   const handleSubmit = async () => {
-    if (!selectedSpot) {
-      return alert('Please select a spot.');
-    }
+    if (isSubmitting) return; // Guard against double submission
+    if (!selectedSpot) return alert('Please select a spot.');
 
-    // Check for empty fields
     for (const key in formData) {
-      if (!formData[key]) {
-        return alert('Please fill in all required fields.');
-      }
+      if (!formData[key]) return alert('Please fill in all required fields.');
     }
 
-    // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       return alert('Please enter a valid email address.');
@@ -88,6 +84,9 @@ export default function GuestParkingBookingApp() {
       license_plate: formData.licensePlate,
     };
 
+    setIsSubmitting(true);
+    setMessage('');
+
     try {
       const res = await fetch(`${API_BASE_URL}/api/bookings`, {
         method: 'POST',
@@ -95,6 +94,7 @@ export default function GuestParkingBookingApp() {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
+
       if (res.ok) {
         setBookingConfirmed(true);
         setMessage(data.message || 'Booking confirmed!');
@@ -104,8 +104,11 @@ export default function GuestParkingBookingApp() {
     } catch (err) {
       console.error(err);
       setMessage('Failed to connect to server.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
 
 
   const renderWeekend = (date) => {
@@ -228,7 +231,37 @@ export default function GuestParkingBookingApp() {
       </div>
 
 
-      <Button onClick={handleSubmit} className="w-full">Submit Booking</Button>
+      <Button
+        onClick={handleSubmit}
+        className="w-full flex items-center justify-center gap-2"
+        disabled={isSubmitting}
+      >
+        {isSubmitting && (
+          <svg
+            className="animate-spin h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            />
+          </svg>
+        )}
+        {isSubmitting ? 'Submitting...' : 'Submit Booking'}
+      </Button>
+
+
 
       {message && (
         <Card className="mt-6">
