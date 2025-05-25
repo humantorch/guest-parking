@@ -37,22 +37,23 @@ export default function GuestParkingBookingApp() {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    const fetchAvailability = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/bookings/availability?weekend=${format(selectedWeekend, 'yyyy-MM-dd')}`);
-        const data = await res.json();
-        if (res.ok) {
-          setAvailableSpots(data.availableSpots);
-        } else {
-          console.error('Error loading availability:', data.error);
-          setAvailableSpots([]);
-        }
-      } catch (err) {
-        console.error('Failed to fetch availability:', err);
+  const fetchAvailability = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/bookings/availability?weekend=${format(selectedWeekend, 'yyyy-MM-dd')}`);
+      const data = await res.json();
+      if (res.ok) {
+        setAvailableSpots(data.availableSpots);
+      } else {
+        console.error('Error loading availability:', data.error);
         setAvailableSpots([]);
       }
-    };
+    } catch (err) {
+      console.error('Failed to fetch availability:', err);
+      setAvailableSpots([]);
+    }
+  };
+
+  useEffect(() => {
     fetchAvailability();
   }, [selectedWeekend]);
 
@@ -103,6 +104,7 @@ export default function GuestParkingBookingApp() {
         setBookingConfirmed(true);
         toast.success(data.message || 'Booking confirmed!');
         setSelectedSpot(null);
+        fetchAvailability();
         setFormData({
           firstName: '',
           lastName: '',
