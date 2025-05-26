@@ -6,7 +6,7 @@ export const Card = forwardRef(({ className, ...props }, ref) => {
   return (
     <div
       ref={ref}
-      className={clsx('rounded border bg-white text-black shadow-sm', className)}
+      className={clsx('rounded border text-black shadow-sm', className)}
       {...props}
     />
   );
