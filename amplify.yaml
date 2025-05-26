@@ -5,12 +5,14 @@ applications:
       phases:
         preBuild:
           commands:
-            # ✅ Only build if frontend files changed
+            # Skip frontend build if no changes in frontend/
+            - echo "🧪 Checking if frontend/ changed..."
             - |
-              if ! git diff --name-only $CODEBUILD_RESOLVED_SOURCE_VERSION $CODEBUILD_SOURCE_VERSION | grep -qE '^frontend/|^amplify.yml|^\.github/'; then
+              if ! git diff --name-only $CODEBUILD_RESOLVED_SOURCE_VERSION $CODEBUILD_SOURCE_VERSION | grep -q '^frontend/'; then
                 echo "🛑 No frontend changes detected. Skipping build."
                 exit 0
               fi
+            - echo "✅ Frontend changes detected. Proceeding..."
             - npm ci
         build:
           commands:
@@ -21,4 +23,4 @@ applications:
           - '**/*'
       cache:
         paths:
-          - node_modules/**/*
+          - node_modules/***
