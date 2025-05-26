@@ -1,0 +1,6 @@
+version: 1
+applications:
+  - frontend:
+      root: frontend
+      build:
+        buildSpec: frontend/amplify.yml
