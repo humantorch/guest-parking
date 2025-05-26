@@ -3,6 +3,7 @@ frontend:
   phases:
     preBuild:
       commands:
+        - cd frontend
         - rm -rf node_modules
         - export VITE_REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
         - export VITE_REACT_APP_ADMIN_PASSWORD=$REACT_APP_ADMIN_PASSWORD
@@ -17,4 +18,4 @@ frontend:
       - '**/*'
   cache:
     paths:
-      - node_modules/**/*
+      - frontend/node_modules/**/*
