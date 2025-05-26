@@ -2,6 +2,9 @@ name: Deploy Backend to Lambda
 
 on:
   push:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
     branches:
       - main
 
@@ -19,10 +22,14 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd backend
+          npm ci
 
       - name: Create deployment zip
-        run: zip -r backend.zip . -x "*.git*" ".github/*" "terraform/*"
+        run: |
+          cd backend
+          zip -r ../backend.zip . -x "*.git*" ".github/*" "terraform/*"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
