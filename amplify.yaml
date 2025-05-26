@@ -5,13 +5,9 @@ applications:
       phases:
         preBuild:
           commands:
-            - rm -rf node_modules
-            - export VITE_REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
-            - export VITE_REACT_APP_ADMIN_PASSWORD=$REACT_APP_ADMIN_PASSWORD
             - npm ci
         build:
           commands:
-            - echo "REACT_APP_BACKEND_URL is $REACT_APP_BACKEND_URL"
             - npm run build
       artifacts:
         baseDirectory: dist
@@ -20,3 +16,4 @@ applications:
       cache:
         paths:
           - node_modules/**
+
