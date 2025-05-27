@@ -7,7 +7,7 @@ applications:
           commands:
             - echo "🧪 Checking if frontend/ changed..."
             - |
-              CHANGED=$(git diff-tree --no-commit-id --name-only -r $CODEBUILD_RESOLVED_SOURCE_VERSION | grep '^frontend/' || true)
+              CHANGED=$(git show --pretty="" --name-only $CODEBUILD_RESOLVED_SOURCE_VERSION | grep '^frontend/' || true)
               if [ -n "$CHANGED" ]; then
                 echo "✅ Changes detected in frontend/:"
                 echo "$CHANGED"
