@@ -9,6 +9,7 @@ guest-parking/
 ├── frontend/      # Vite + React app (deployed to Amplify)
 ├── backend/       # Express API (deployed to AWS Lambda)
 ├── infra/         # Terraform IaC for backend infrastructure
+├── screenshots/   # I mean I *hope* this folder is pretty self-explanatory
 └── .github/       # GitHub Actions CI/CD workflows
 ```
 
@@ -137,5 +138,5 @@ If using Supabase:
 
 ## 📬 Contact
 
-Built with ❤️, hot-reloading, and a _lot_ of `console.log()` commands by @humantorch 🔥  
+Built with ❤️, hot-reloading, and a _lot_ of `console.log()` commands by [Scott Kosman](https://scottkosman.com)  
 Got questions or want to contribute? Open an issue or reach out!
