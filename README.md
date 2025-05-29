@@ -97,8 +97,14 @@ ALLOWED_ORIGINS=https://main.<your-app>.amplifyapp.com
 
 ## 📸 Screenshots
 
-> _(Insert animated GIFs or screenshots here!)_  
-> Booking flow, email confirmation, and admin calendar view 🎉
+### Booking page
+![Booking page ](screenshots/booking.png)
+
+### Confirmation email
+![Confirmation email](screenshots/email.png)
+
+### Administration
+![Administration](screenshots/admin.png)
 
 ## 🧪 Local Development
 
