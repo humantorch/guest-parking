@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: |
@@ -49,8 +49,8 @@ jobs:
           echo "Waiting for Lambda to finish updating..."
           aws lambda wait function-updated --function-name guest-parking-backend
 
-      - name: Update Lambda Runtime to Node.js 20
+      - name: Update Lambda Runtime to Node.js 22
         run: |
           aws lambda update-function-configuration \
             --function-name guest-parking-backend \
-            --runtime nodejs20.x
+            --runtime nodejs22.x
