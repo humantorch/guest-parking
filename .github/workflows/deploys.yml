@@ -43,3 +43,9 @@ jobs:
           aws lambda update-function-code \
             --function-name guest-parking-backend \
             --zip-file fileb://backend.zip
+
+      - name: Update Lambda Runtime to Node.js 20
+        run: |
+          aws lambda update-function-configuration \
+            --function-name guest-parking-backend \
+            --runtime nodejs20.x
