@@ -193,13 +193,13 @@ To prevent the free-tier Supabase database from pausing due to inactivity, a sch
 ## 📸 Screenshots
 
 ### Booking page
-![Booking page ](screenshots/booking.png)
+![Booking page ](screenshots/booking.png?v=2)
 
 ### Confirmation email
 ![Confirmation email](screenshots/email.png)
 
 ### Administration
-![Administration](screenshots/admin.png)
+![Administration](screenshots/admin.png?v=2)
 
 ## 🧪 Local Development
 
