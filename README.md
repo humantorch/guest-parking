@@ -1,6 +1,6 @@
 # 🚗 Guest Parking App
 
-A full-stack web app that allows condo residents to book guest parking spots for weekends, with a clean admin interface, email confirmations, and AWS-powered infrastructure.
+A full-stack web app that allows condo residents to book guest parking spots for single days or entire weekends, with a clean admin interface, email confirmations, and AWS-powered infrastructure.
 
 ## 📁 Project Structure
 
@@ -21,12 +21,11 @@ guest-parking/
 
 ### Features
 
-✅ Book parking spots for upcoming weekends  
+✅ **NEW** Actually has a UI that's had a little bit of thought put into it!  
+✅ **NEW** Services more than just weekends! Book spots for a single day all week OR for a full weekend at once. 
 ✅ View available spots dynamically  
 ✅ Email confirmations for users  
-✅ Admin view with delete capability and calendar view  
-✅ Bookings grouped by weekend  
-✅ Past bookings hidden by default  
+✅ Admin view with a calendar and booking list with delete functionality  
 ✅ CORS-safe, responsive, and toast-notified!
 
 ## 🛠️ Backend
@@ -70,21 +69,26 @@ You can use either a local PostgreSQL database for development or set up your re
    psql -U guest_parking_user -d guest_parking_dev -f infra/schema.sql
    ```
 
-4. **Configure your backend**
-   
+4. **(Optional) Seed the database with sample data:**
+   ```bash
+   psql -U guest_parking_user -d guest_parking_dev -f infra/seed.sql
+   ```
+   This will populate the `bookings` table with a few single-day and weekend bookings for testing/demo purposes.
+
+5. **Configure your backend**
    In `backend/.env`, set:
      ```
      DATABASE_URL=postgresql://guest_parking_user:devpassword@localhost:5432/guest_parking_dev?sslmode=disable
      ```
 
-5. **Run the backend**
+6. **Run the backend**
    ```bash
    cd backend
    npm install
    node index.js
    ```
 
-You can now use your local database for development. See the `infra/schema.sql` file for the database structure.
+You can now use your local database for development. See the `infra/schema.sql` file for the database structure and `infra/seed.sql` for sample data.
 
 ### Remote (Supabase or Other) Database Setup
 
@@ -97,21 +101,25 @@ You can now use your local database for development. See the `infra/schema.sql` 
    - Replace `<your-remote-connection-string>` with your actual connection string. For Supabase, you can find this in the project settings under Database > Connection string.
    - If your remote database requires SSL, ensure your connection string includes the appropriate SSL parameters (e.g., `?sslmode=require`).
 
-3. **Configure your backend**
-   
+3. **(Optional) Seed the remote database with sample data:**
+   ```bash
+   psql "<your-remote-connection-string>" -f infra/seed.sql
+   ```
+
+4. **Configure your backend**
    In `backend/.env`, set:
      ```
      DATABASE_URL=<your-remote-connection-string>
      ```
 
-4. **Run the backend**
+5. **Run the backend**
    ```bash
    cd backend
    npm install
    node index.js
    ```
 
-Your backend will now use your remote database. See the `infra/schema.sql` file for the database structure.
+Your backend will now use your remote database. See the `infra/schema.sql` file for the database structure and `infra/seed.sql` for sample data.
 
 ## ☁️ Infrastructure
 
@@ -163,6 +171,16 @@ RESEND_API_KEY=re_XXXX
 FROM_EMAIL=admin@example.com
 ALLOWED_ORIGINS=https://main.<your-app>.amplifyapp.com
 ```
+
+## 🛠️ Maintenance Mode
+
+To temporarily take the site offline (e.g., for database migrations):
+
+1. Set the environment variable `VITE_MAINTENANCE_MODE=true` in your Amplify (or frontend) environment.
+2. Redeploy the frontend app.
+3. To bring the site back online, set `VITE_MAINTENANCE_MODE=false` and redeploy again.
+
+While in maintenance mode, users will see a full-page maintenance message and cannot interact with the app.
 
 ## 🕒 Supabase Keep-Alive
 
