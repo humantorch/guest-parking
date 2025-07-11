@@ -4,7 +4,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Oswald', 'system-ui', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
   safelist: ['bg-blue-100', 'outline', 'outline-blue-300'],

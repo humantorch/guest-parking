@@ -6,21 +6,24 @@ import { isFriday, isSaturday, isSunday, startOfWeek, addDays, format } from 'da
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import toast, { Toaster } from 'react-hot-toast';
+import { CalendarDaysIcon, UserIcon, TruckIcon } from '@heroicons/react/24/outline';
 
 
 const TOTAL_SPOTS = 7;
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
-function getNextFriday() {
-  const date = new Date();
-  const day = date.getDay(); // 0 = Sunday, 5 = Friday
-  const daysUntilFriday = (5 - day + 7) % 7 || 7;
-  date.setDate(date.getDate() + daysUntilFriday);
-  date.setHours(0, 0, 0, 0);
-  return date;
-}
-
 export default function GuestParkingBookingApp() {
+  const isMaintenance = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
+
+  if (isMaintenance) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+        <h1 className="text-3xl font-bold mb-4 text-indigo-700">🚧 Maintenance Mode</h1>
+        <p className="text-lg text-gray-700">The site is temporarily offline for scheduled maintenance.<br />Please check back soon!</p>
+      </div>
+    );
+  }
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [bookingType, setBookingType] = useState('single'); // 'single' or 'weekend'
   const [availableSpots, setAvailableSpots] = useState([]);
@@ -239,188 +242,145 @@ export default function GuestParkingBookingApp() {
       : 'Weekend: ';
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8">
       <Toaster />
-      <h1 className="text-2xl font-bold mb-4">Guest Parking Booking</h1>
-      <div className="mb-4 flex items-start gap-4">
+      {/* Hero Section */}
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2">
+          <CalendarDaysIcon className="w-8 h-8 text-indigo-600 inline-block" />
+          Book Guest Parking
+        </h1>
+        <p className="text-gray-600 max-w-xl mx-auto">Reserve a spot for your guest—quick, easy, and instant confirmation.</p>
+      </div>
+      {/* Card Layout */}
+      <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-8">
+        {/* Date Section */}
         <div>
-          <label className="block font-medium mb-2">Select Date</label>
+          <div className="flex items-center gap-2 mb-2">
+            <CalendarDaysIcon className="w-5 h-5 text-indigo-500" />
+            <span className="font-semibold text-lg text-indigo-800">Select Date</span>
+          </div>
           <DatePicker
             selected={selectedDate}
             onChange={(date) => setSelectedDate(date)}
             minDate={new Date()}
             dateFormat="yyyy-MM-dd"
-            className="border p-2 rounded"
+            className="border p-2 rounded w-full focus:ring-2 focus:ring-indigo-300"
             placeholderText="Select a date"
           />
+          <div className="text-sm text-gray-600 mt-1">{weekendText}</div>
         </div>
-        {/* Always show booking type toggle and weekend text, but disable/grey out for weekdays */}
-        <div className={`mb-2 flex flex-col gap-2 ${!(isFriday(selectedDate) || isSaturday(selectedDate) || isSunday(selectedDate)) ? 'opacity-50 pointer-events-none select-none' : ''} border-l-2 border-gray-200 pl-6`}>
-          <label className="block font-medium mb-2">Booking Type</label>
-          <div className="flex gap-4">
-            <label>
+        {/* Booking Type Toggle */}
+        <div className="flex items-center gap-4">
+          <span className="font-semibold text-indigo-800">Booking Type:</span>
+          <div className={`flex gap-4 ${!(isFriday(selectedDate) || isSaturday(selectedDate) || isSunday(selectedDate)) ? 'opacity-50 pointer-events-none select-none' : ''}`}> 
+            <label className="flex items-center gap-1">
               <input
                 type="radio"
                 value="single"
                 checked={bookingType === 'single'}
                 onChange={() => setBookingType('single')}
                 disabled={!(isFriday(selectedDate) || isSaturday(selectedDate) || isSunday(selectedDate))}
-              />{' '}
-              Book only this day
+              />
+              Only this day
             </label>
-            <label>
+            <label className="flex items-center gap-1">
               <input
                 type="radio"
                 value="weekend"
                 checked={bookingType === 'weekend'}
                 onChange={() => setBookingType('weekend')}
                 disabled={!(isFriday(selectedDate) || isSaturday(selectedDate) || isSunday(selectedDate))}
-              />{' '}
-              Book the full weekend (Fri–Sun)
+              />
+              Full weekend (Fri–Sun)
             </label>
           </div>
-          <div className="text-sm text-gray-600 mt-1">
-            {weekendText}
-          </div>
         </div>
-      </div>
-
-      <div className="mb-4">
-        <label className="block font-medium mb-2">Available Spots</label>
-        <div className="flex flex-col gap-4">
-          {/* P1 Group */}
-          <div>
-            <h3 className="font-semibold mb-2">Level P1 (Spots 1–4)</h3>
-            <div className="flex gap-2 flex-wrap">
-              {[1, 2, 3, 4].map((spot) => {
-                const isAvailable = availableSpots.includes(spot);
-                const isSelected = selectedSpot === spot;
-
-                return (
-                  <Button
-                    key={spot}
-                    variant={isSelected ? 'default' : 'outline'}
-                    onClick={() => isAvailable && setSelectedSpot(spot)}
-                    disabled={!isAvailable}
-                    className={!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}
-                  >
-                    Spot {spot}
-                  </Button>
-                );
-              })}
+        <hr className="my-2 border-gray-200" />
+        {/* Spot Selection Section */}
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <TruckIcon className="w-5 h-5 text-indigo-500" />
+            <span className="font-semibold text-lg text-indigo-800">Select Spot</span>
+          </div>
+          <div className="flex flex-col gap-4">
+            {/* P1 Group */}
+            <div>
+              <h3 className="font-semibold mb-2 text-gray-700">Level P1 (Spots 1–4)</h3>
+              <div className="flex gap-2 flex-wrap">
+                {[1, 2, 3, 4].map((spot) => {
+                  const isAvailable = availableSpots.includes(spot);
+                  const isSelected = selectedSpot === spot;
+                  return (
+                    <Button
+                      key={spot}
+                      variant={isSelected ? 'default' : 'outline'}
+                      onClick={() => isAvailable && setSelectedSpot(spot)}
+                      disabled={!isAvailable}
+                      className={
+                        `${isAvailable ? 'border-green-400 text-green-700 hover:bg-green-50' : 'border-gray-300 text-gray-400 cursor-not-allowed'} ` +
+                        `${isSelected ? 'ring-2 ring-indigo-400' : ''} px-4 py-2 rounded-lg font-semibold transition`
+                      }
+                    >
+                      Spot {spot}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+            {/* P2 Group */}
+            <div>
+              <h3 className="font-semibold mb-2 text-gray-700">Level P2 (Spots 5–7)</h3>
+              <div className="flex gap-2 flex-wrap">
+                {[5, 6, 7].map((spot) => {
+                  const isAvailable = availableSpots.includes(spot);
+                  const isSelected = selectedSpot === spot;
+                  return (
+                    <Button
+                      key={spot}
+                      variant={isSelected ? 'default' : 'outline'}
+                      onClick={() => isAvailable && setSelectedSpot(spot)}
+                      disabled={!isAvailable}
+                      className={
+                        `${isAvailable ? 'border-green-400 text-green-700 hover:bg-green-50' : 'border-gray-300 text-gray-400 cursor-not-allowed'} ` +
+                        `${isSelected ? 'ring-2 ring-indigo-400' : ''} px-4 py-2 rounded-lg font-semibold transition`
+                      }
+                    >
+                      Spot {spot}
+                    </Button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-
-          {/* P2 Group */}
-          <div>
-            <h3 className="font-semibold mb-2">Level P2 (Spots 5–7)</h3>
-            <div className="flex gap-2 flex-wrap">
-              {[5, 6, 7].map((spot) => {
-                const isAvailable = availableSpots.includes(spot);
-                const isSelected = selectedSpot === spot;
-
-                return (
-                  <Button
-                    key={spot}
-                    variant={isSelected ? 'default' : 'outline'}
-                    onClick={() => isAvailable && setSelectedSpot(spot)}
-                    disabled={!isAvailable}
-                    className={!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}
-                  >
-                    Spot {spot}
-                  </Button>
-                );
-              })}
-            </div>
+        </div>
+        <hr className="my-2 border-gray-200" />
+        {/* Guest Info Section */}
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <UserIcon className="w-5 h-5 text-indigo-500" />
+            <span className="font-semibold text-lg text-indigo-800">Guest Information</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleInputChange} />
+            <Input name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleInputChange} />
+            <Input name="unitNumber" placeholder="Unit Number" value={formData.unitNumber} onChange={handleInputChange} />
+            <Input name="email" placeholder="Email" value={formData.email} onChange={handleInputChange} />
+            <Input name="guestName" placeholder="Guest Name" value={formData.guestName} onChange={handleInputChange} />
+            <Input name="vehicleType" placeholder="Vehicle Type" value={formData.vehicleType} onChange={handleInputChange} />
+            <Input name="licensePlate" placeholder="License Plate" value={formData.licensePlate} onChange={handleInputChange} />
           </div>
         </div>
-
+        <hr className="my-2 border-gray-200" />
+        {/* Book Button */}
+        <Button
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"
+        >
+          {isSubmitting ? 'Booking...' : 'Book Spot'}
+        </Button>
       </div>
-      
-      <hr></hr>
-      <p className="text-sm text-red-600 font-medium flex items-center gap-1 mb-2">
-        ⚠️ All fields are required.
-      </p>
-
-
-      <div className="mb-4 grid grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-1 font-medium" htmlFor="firstName">First Name</label>
-          <Input required id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium" htmlFor="lastName">Last Name</label>
-          <Input required id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium" htmlFor="unitNumber">Unit Number</label>
-          <Input required id="unitNumber" name="unitNumber" value={formData.unitNumber} onChange={handleInputChange} />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium" htmlFor="email">Email</label>
-          <Input
-            required
-            id="email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium" htmlFor="guestName">Guest Name</label>
-          <Input required id="guestName" name="guestName" value={formData.guestName} onChange={handleInputChange} />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium" htmlFor="vehicleType">Vehicle Type</label>
-          <Input required id="vehicleType" name="vehicleType" value={formData.vehicleType} onChange={handleInputChange} />
-        </div>
-        <div className="col-span-2">
-          <label className="block mb-1 font-medium" htmlFor="licensePlate">License Plate</label>
-          <Input required id="licensePlate" name="licensePlate" value={formData.licensePlate} onChange={handleInputChange} />
-        </div>
-      </div>
-
-
-      <Button
-        onClick={handleSubmit}
-        className="w-full flex items-center justify-center gap-2"
-        disabled={isSubmitting}
-      >
-        {isSubmitting && (
-          <svg
-            className="animate-spin h-5 w-5 text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-            />
-          </svg>
-        )}
-        {isSubmitting ? 'Submitting...' : 'Submit Booking'}
-      </Button>
-
-
-
-      {message && (
-        <Card className="mt-6">
-          <CardContent>
-            <p className="text-blue-800">{message}</p>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }
