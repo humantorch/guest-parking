@@ -39,18 +39,18 @@ router.get('/test-email', async (req, res) => {
 
 // Get available spots for a weekend
 router.get('/availability', async (req, res) => {
-  const { weekend } = req.query;
+  const { date } = req.query;
   try {
     const result = await safeQuery(
-      'SELECT spot_number FROM bookings WHERE weekend_start = $1',
-      [weekend]
+      'SELECT spot_number FROM bookings WHERE date = $1',
+      [date]
     );
     const bookedSpots = result.rows.map(r => r.spot_number);
     const allSpots = [1, 2, 3, 4, 5, 6, 7];
     const availableSpots = allSpots.filter(s => !bookedSpots.includes(s));
     return res.json({ availableSpots });
   } catch (err) {
-    return res.status(500).json({ error: 'Database error' });
+    return res.status(500).json({ error: 'Database error', details: err.message });
   }
 });
 
@@ -58,7 +58,7 @@ router.get('/availability', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const result = await safeQuery(
-      `SELECT * FROM bookings ORDER BY weekend_start DESC, spot_number ASC`
+      `SELECT * FROM bookings ORDER BY date DESC, spot_number ASC`
     );
     return res.json({ bookings: result.rows });
   } catch (err) {
@@ -85,25 +85,26 @@ router.delete('/:id', async (req, res) => {
 // Book a spot
 router.post('/', async (req, res) => {
   const {
-    weekend_start, spot_number, first_name, last_name,
+    date, spot_number, first_name, last_name,
     unit_number, email, guest_name, vehicle_type, license_plate
   } = req.body;
 
   // ✅ Basic validation
-  if (!weekend_start || !spot_number || !first_name || !email) {
+  if (!date || !spot_number || !first_name || !email) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   const floor = spot_number <= 4 ? " (P1)" : " (P2)";
 
   try {
+    // Insert
     await safeQuery(
       `INSERT INTO bookings (
-        weekend_start, spot_number, first_name, last_name,
+        date, spot_number, first_name, last_name,
         unit_number, email, guest_name, vehicle_type, license_plate
       ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
       [
-        weekend_start, spot_number, first_name, last_name,
+        date, spot_number, first_name, last_name,
         unit_number, email, guest_name, vehicle_type, license_plate
       ]
     );
@@ -115,7 +116,7 @@ router.post('/', async (req, res) => {
         subject: 'Guest Parking Booking Confirmation',
         html: `
           <p>Hi ${first_name},</p>
-          <p>Your guest parking booking has been confirmed for the weekend starting <strong>${weekend_start}</strong>.</p>
+          <p>Your guest parking booking has been confirmed for the weekend starting <strong>${date}</strong>.</p>
           <ul>
             <li><strong>Spot:</strong> ${spot_number} ${floor}</li>
             <li><strong>Guest:</strong> ${guest_name}</li>

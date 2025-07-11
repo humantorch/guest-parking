@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from './components/ui/card';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
-import { format, addDays, startOfWeek } from 'date-fns';
+import { isFriday, isSaturday, isSunday, startOfWeek, addDays, format } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import toast, { Toaster } from 'react-hot-toast';
@@ -21,7 +21,8 @@ function getNextFriday() {
 }
 
 export default function GuestParkingBookingApp() {
-  const [selectedWeekend, setSelectedWeekend] = useState(getNextFriday());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [bookingType, setBookingType] = useState('single'); // 'single' or 'weekend'
   const [availableSpots, setAvailableSpots] = useState([]);
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,25 +38,54 @@ export default function GuestParkingBookingApp() {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [message, setMessage] = useState('');
 
-  const fetchAvailability = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/bookings/availability?weekend=${format(selectedWeekend, 'yyyy-MM-dd')}`);
-      const data = await res.json();
-      if (res.ok) {
-        setAvailableSpots(data.availableSpots);
-      } else {
-        console.error('Error loading availability:', data.error);
+  const fetchAvailability = async (dateToCheck = selectedDate, bookingTypeToCheck = bookingType) => {
+    if (
+      bookingTypeToCheck === 'weekend' &&
+      [5, 6, 0].includes(dateToCheck.getDay())
+    ) {
+      // Calculate Friday of the weekend
+      let friday;
+      if (isFriday(dateToCheck)) friday = dateToCheck;
+      else if (isSaturday(dateToCheck)) friday = addDays(dateToCheck, -1);
+      else if (isSunday(dateToCheck)) friday = addDays(dateToCheck, -2);
+      const weekendDates = [friday, addDays(friday, 1), addDays(friday, 2)];
+
+      // Fetch availability for all three days
+      const spotSets = await Promise.all(
+        weekendDates.map(async (d) => {
+          const res = await fetch(
+            `${API_BASE_URL}/api/bookings/availability?date=${format(d, 'yyyy-MM-dd')}`
+          );
+          const data = await res.json();
+          return data.availableSpots || [];
+        })
+      );
+      // Only include spots available on all three days
+      const availableSpots = [1, 2, 3, 4, 5, 6, 7].filter((spot) =>
+        spotSets.every((set) => set.includes(spot))
+      );
+      setAvailableSpots(availableSpots);
+    } else {
+      // Single day logic (as before)
+      try {
+        const res = await fetch(
+          `${API_BASE_URL}/api/bookings/availability?date=${format(dateToCheck, 'yyyy-MM-dd')}`
+        );
+        const data = await res.json();
+        if (res.ok) {
+          setAvailableSpots(data.availableSpots);
+        } else {
+          setAvailableSpots([]);
+        }
+      } catch (err) {
         setAvailableSpots([]);
       }
-    } catch (err) {
-      console.error('Failed to fetch availability:', err);
-      setAvailableSpots([]);
     }
   };
 
   useEffect(() => {
-    fetchAvailability();
-  }, [selectedWeekend]);
+    fetchAvailability(selectedDate, bookingType);
+  }, [selectedDate, bookingType]);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -81,8 +111,10 @@ export default function GuestParkingBookingApp() {
     }
 
     setIsSubmitting(true);
-    const payload = {
-      weekend_start: format(selectedWeekend, 'yyyy-MM-dd'),
+
+    // Helper to build payload
+    const buildPayload = (dateStr) => ({
+      date: dateStr,
       spot_number: selectedSpot,
       first_name: formData.firstName,
       last_name: formData.lastName,
@@ -91,38 +123,78 @@ export default function GuestParkingBookingApp() {
       guest_name: formData.guestName,
       vehicle_type: formData.vehicleType,
       license_plate: formData.licensePlate,
-    };
+    });
 
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/bookings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setBookingConfirmed(true);
-        toast.success(data.message || 'Booking confirmed!');
-        setSelectedSpot(null);
-        fetchAvailability();
-        setFormData({
-          firstName: '',
-          lastName: '',
-          unitNumber: '',
-          email: '',
-          guestName: '',
-          vehicleType: '',
-          licensePlate: '',
-        });
-      } else {
-        toast.error(data.error || 'Something went wrong.');
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('Failed to connect to server.');
-    } finally {
-      setIsSubmitting(false);
+    // Determine if bookingType is 'weekend' and selectedDate is Fri/Sat/Sun
+    const day = selectedDate.getDay();
+    const isWeekendDay = [5, 6, 0].includes(day); // Fri=5, Sat=6, Sun=0
+    let bookingDates = [selectedDate];
+    if (bookingType === 'weekend' && isWeekendDay) {
+      // Find the Friday of the weekend
+      let friday;
+      if (isFriday(selectedDate)) friday = selectedDate;
+      else if (isSaturday(selectedDate)) friday = addDays(selectedDate, -1);
+      else if (isSunday(selectedDate)) friday = addDays(selectedDate, -2);
+      bookingDates = [friday, addDays(friday, 1), addDays(friday, 2)];
     }
+
+    // Check all days for spot availability before submitting
+    let unavailable = [];
+    for (const d of bookingDates) {
+      const res = await fetch(`${API_BASE_URL}/api/bookings/availability?date=${format(d, 'yyyy-MM-dd')}`);
+      const data = await res.json();
+      if (!data.availableSpots || !data.availableSpots.includes(selectedSpot)) {
+        unavailable.push(format(d, 'yyyy-MM-dd'));
+      }
+    }
+    if (unavailable.length > 0) {
+      toast.error(`Spot not available on: ${unavailable.join(', ')}`);
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Submit bookings for all days
+    let allSuccess = true;
+    for (const d of bookingDates) {
+      const payload = buildPayload(format(d, 'yyyy-MM-dd'));
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/bookings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          allSuccess = false;
+          toast.error(data.error || 'Something went wrong.');
+          break;
+        }
+      } catch (err) {
+        allSuccess = false;
+        toast.error('Failed to connect to server.');
+        break;
+      }
+    }
+    if (allSuccess) {
+      setBookingConfirmed(true);
+      toast.success(
+        bookingType === 'weekend' && isWeekendDay
+          ? 'Full weekend booking confirmed!'
+          : 'Booking confirmed!'
+      );
+      setSelectedSpot(null);
+      fetchAvailability();
+      setFormData({
+        firstName: '',
+        lastName: '',
+        unitNumber: '',
+        email: '',
+        guestName: '',
+        vehicleType: '',
+        licensePlate: '',
+      });
+    }
+    setIsSubmitting(false);
   };
 
   const renderWeekend = (date) => {
@@ -131,22 +203,62 @@ export default function GuestParkingBookingApp() {
     return `${format(friday, 'MMM d')} - ${format(monday, 'MMM d, yyyy')}`;
   };
 
+  // Calculate the correct weekend range for the selected date
+  let weekendFriday = null;
+  if (isFriday(selectedDate)) weekendFriday = selectedDate;
+  else if (isSaturday(selectedDate)) weekendFriday = addDays(selectedDate, -1);
+  else if (isSunday(selectedDate)) weekendFriday = addDays(selectedDate, -2);
+
+  const weekendText =
+    weekendFriday
+      ? `Weekend: ${format(weekendFriday, 'MMM d')} - ${format(addDays(weekendFriday, 2), 'MMM d, yyyy')}`
+      : 'Weekend: ';
+
   return (
     <div className="max-w-3xl mx-auto p-4">
       <Toaster />
       <h1 className="text-2xl font-bold mb-4">Guest Parking Booking</h1>
-      <div className="mb-4">
-        <label className="block font-medium mb-2">Select Weekend</label>
-        <DatePicker
-          selected={selectedWeekend}
-          onChange={(date) => setSelectedWeekend(date)}
-          filterDate={(date) => date.getDay() === 5} // only allow Fridays
-          minDate={new Date()} // disable past dates
-          dateFormat="yyyy-MM-dd"
-          className="border p-2 rounded"
-          placeholderText="Select a Friday"
-        />
-        <div className="text-sm text-gray-600 mt-1">Weekend: {renderWeekend(selectedWeekend)}</div>
+      <div className="mb-4 flex items-start gap-4">
+        <div>
+          <label className="block font-medium mb-2">Select Date</label>
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            minDate={new Date()}
+            dateFormat="yyyy-MM-dd"
+            className="border p-2 rounded"
+            placeholderText="Select a date"
+          />
+        </div>
+        {/* Always show booking type toggle and weekend text, but disable/grey out for weekdays */}
+        <div className={`mb-2 flex flex-col gap-2 ${!(isFriday(selectedDate) || isSaturday(selectedDate) || isSunday(selectedDate)) ? 'opacity-50 pointer-events-none select-none' : ''} border-l-2 border-gray-200 pl-6`}>
+          <label className="block font-medium mb-2">Booking Type</label>
+          <div className="flex gap-4">
+            <label>
+              <input
+                type="radio"
+                value="single"
+                checked={bookingType === 'single'}
+                onChange={() => setBookingType('single')}
+                disabled={!(isFriday(selectedDate) || isSaturday(selectedDate) || isSunday(selectedDate))}
+              />{' '}
+              Book only this day
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="weekend"
+                checked={bookingType === 'weekend'}
+                onChange={() => setBookingType('weekend')}
+                disabled={!(isFriday(selectedDate) || isSaturday(selectedDate) || isSunday(selectedDate))}
+              />{' '}
+              Book the full weekend (Fri–Sun)
+            </label>
+          </div>
+          <div className="text-sm text-gray-600 mt-1">
+            {weekendText}
+          </div>
+        </div>
       </div>
 
       <div className="mb-4">
