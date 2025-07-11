@@ -96,6 +96,14 @@ FROM_EMAIL=admin@example.com
 ALLOWED_ORIGINS=https://main.<your-app>.amplifyapp.com
 ```
 
+## 🕒 Supabase Keep-Alive
+
+To prevent the free-tier Supabase database from pausing due to inactivity, a scheduled GitHub Actions workflow (`supabase-ping.yml`) runs every 3 days. This workflow calls the `/api/bookings/availability` endpoint with a valid weekend date, ensuring a real database query is executed and keeping the database awake.
+
+- Workflow: `.github/workflows/supabase-ping.yml`
+- Endpoint: `https://aso4mwrw90.execute-api.us-east-1.amazonaws.com/api/bookings/availability?weekend=YYYY-MM-DD`
+- Adjust the schedule or endpoint as needed if the API changes.
+
 ## 📸 Screenshots
 
 ### Booking page
@@ -140,3 +148,4 @@ If using Supabase:
 
 Built with ❤️, hot-reloading, and a _lot_ of `console.log()` commands by [Scott Kosman](https://scottkosman.com)  
 Got questions or want to contribute? Open an issue or reach out!
+
