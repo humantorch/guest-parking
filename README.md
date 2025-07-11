@@ -45,6 +45,72 @@ guest-parking/
 | POST   | `/api/bookings`              | Create a new booking                |
 | DELETE | `/api/bookings/:id`          | Delete a booking (admin only)       |
 
+## 🗄️ Database Setup
+
+You can use either a local PostgreSQL database for development or set up your remote (e.g., Supabase) database using the provided schema.
+
+### Local Database Setup
+
+1. **Install PostgreSQL**
+   - macOS: `brew install postgresql && brew services start postgresql`
+   - Windows/Linux: Download from [postgresql.org](https://www.postgresql.org/download/)
+
+2. **Create the database and user:**
+   ```bash
+   psql postgres
+   # In the psql prompt:
+   CREATE DATABASE guest_parking_dev;
+   CREATE USER guest_parking_user WITH PASSWORD 'devpassword';
+   GRANT ALL PRIVILEGES ON DATABASE guest_parking_dev TO guest_parking_user;
+   \q
+   ```
+
+3. **Apply the schema:**
+   ```bash
+   psql -U guest_parking_user -d guest_parking_dev -f infra/schema.sql
+   ```
+
+4. **Configure your backend**
+   - In `backend/.env`, set:
+     ```
+     DATABASE_URL=postgresql://guest_parking_user:devpassword@localhost:5432/guest_parking_dev?sslmode=disable
+     ```
+
+5. **Run the backend**
+   ```bash
+   cd backend
+   npm install
+   node index.js
+   ```
+
+You can now use your local database for development. See the `infra/schema.sql` file for the database structure.
+
+### Remote (Supabase or Other) Database Setup
+
+1. **Obtain your remote database connection string** from your provider (e.g., Supabase project settings).
+
+2. **Apply the schema to your remote database:**
+   ```bash
+   psql "<your-remote-connection-string>" -f infra/schema.sql
+   ```
+   - Replace `<your-remote-connection-string>` with your actual connection string. For Supabase, you can find this in the project settings under Database > Connection string.
+   - If your remote database requires SSL, ensure your connection string includes the appropriate SSL parameters (e.g., `?sslmode=require`).
+
+3. **Configure your backend**
+   - In `backend/.env`, set:
+     ```
+     DATABASE_URL=<your-remote-connection-string>
+     ```
+
+4. **Run the backend**
+   ```bash
+   cd backend
+   npm install
+   node index.js
+   ```
+
+Your backend will now use your remote database. See the `infra/schema.sql` file for the database structure.
+
 ## ☁️ Infrastructure
 
 - Managed with [Terraform](https://www.terraform.io/)
