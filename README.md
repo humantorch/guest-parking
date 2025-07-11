@@ -71,7 +71,8 @@ You can use either a local PostgreSQL database for development or set up your re
    ```
 
 4. **Configure your backend**
-   - In `backend/.env`, set:
+   
+   In `backend/.env`, set:
      ```
      DATABASE_URL=postgresql://guest_parking_user:devpassword@localhost:5432/guest_parking_dev?sslmode=disable
      ```
@@ -97,7 +98,8 @@ You can now use your local database for development. See the `infra/schema.sql` 
    - If your remote database requires SSL, ensure your connection string includes the appropriate SSL parameters (e.g., `?sslmode=require`).
 
 3. **Configure your backend**
-   - In `backend/.env`, set:
+   
+   In `backend/.env`, set:
      ```
      DATABASE_URL=<your-remote-connection-string>
      ```
