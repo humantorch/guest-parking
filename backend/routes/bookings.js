@@ -145,6 +145,74 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Batch booking for full weekend
+router.post('/batch', async (req, res) => {
+  const {
+    dates, // array of date strings
+    spot_number, first_name, last_name,
+    unit_number, email, guest_name, vehicle_type, license_plate
+  } = req.body;
+
+  if (!dates || !Array.isArray(dates) || dates.length === 0 || !spot_number || !first_name || !email) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    for (const date of dates) {
+      // Check for conflicts
+      const existing = await client.query(
+        'SELECT 1 FROM bookings WHERE date = $1 AND spot_number = $2',
+        [date, spot_number]
+      );
+      if (existing.rowCount > 0) {
+        throw new Error(`Spot already booked for ${date}`);
+      }
+      await client.query(
+        `INSERT INTO bookings (
+          date, spot_number, first_name, last_name,
+          unit_number, email, guest_name, vehicle_type, license_plate
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+        [
+          date, spot_number, first_name, last_name,
+          unit_number, email, guest_name, vehicle_type, license_plate
+        ]
+      );
+    }
+    await client.query('COMMIT');
+
+    // Send a single email listing all dates
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL,
+      to: email,
+      subject: 'Guest Parking Booking Confirmation (Full Weekend)',
+      html: `
+        <p>Hi ${first_name},</p>
+        <p>Your guest parking booking has been confirmed for the following dates:</p>
+        <ul>
+          ${dates.map(d => `<li>${d}</li>`).join('')}
+        </ul>
+        <ul>
+          <li><strong>Spot:</strong> ${spot_number}</li>
+          <li><strong>Guest:</strong> ${guest_name}</li>
+          <li><strong>Vehicle:</strong> ${vehicle_type}</li>
+          <li><strong>License Plate:</strong> ${license_plate}</li>
+        </ul>
+        <p>Please call the superintendent if you need to cancel a booking.</p>
+        <p>Thanks,<br><em>The Admiralty Place Parking Team</em></p>
+      `
+    });
+
+    return res.status(201).json({ message: 'Full weekend booking confirmed!' });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    return res.status(409).json({ error: err.message });
+  } finally {
+    client.release();
+  }
+});
+
 router.get('/ping', async (req, res) => {
   try {
     await safeQuery('SELECT 1');

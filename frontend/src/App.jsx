@@ -125,12 +125,10 @@ export default function GuestParkingBookingApp() {
       license_plate: formData.licensePlate,
     });
 
-    // Determine if bookingType is 'weekend' and selectedDate is Fri/Sat/Sun
     const day = selectedDate.getDay();
     const isWeekendDay = [5, 6, 0].includes(day); // Fri=5, Sat=6, Sun=0
     let bookingDates = [selectedDate];
     if (bookingType === 'weekend' && isWeekendDay) {
-      // Find the Friday of the weekend
       let friday;
       if (isFriday(selectedDate)) friday = selectedDate;
       else if (isSaturday(selectedDate)) friday = addDays(selectedDate, -1);
@@ -153,10 +151,38 @@ export default function GuestParkingBookingApp() {
       return;
     }
 
-    // Submit bookings for all days
     let allSuccess = true;
-    for (const d of bookingDates) {
-      const payload = buildPayload(format(d, 'yyyy-MM-dd'));
+    if (bookingType === 'weekend' && isWeekendDay) {
+      // Batch booking: send one request to /api/bookings/batch
+      const payload = {
+        dates: bookingDates.map(d => format(d, 'yyyy-MM-dd')),
+        spot_number: selectedSpot,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        unit_number: formData.unitNumber,
+        email: formData.email,
+        guest_name: formData.guestName,
+        vehicle_type: formData.vehicleType,
+        license_plate: formData.licensePlate,
+      };
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/bookings/batch`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          allSuccess = false;
+          toast.error(data.error || 'Something went wrong.');
+        }
+      } catch (err) {
+        allSuccess = false;
+        toast.error('Failed to connect to server.');
+      }
+    } else {
+      // Single day booking: use existing endpoint
+      const payload = buildPayload(format(selectedDate, 'yyyy-MM-dd'));
       try {
         const res = await fetch(`${API_BASE_URL}/api/bookings`, {
           method: 'POST',
@@ -167,12 +193,10 @@ export default function GuestParkingBookingApp() {
         if (!res.ok) {
           allSuccess = false;
           toast.error(data.error || 'Something went wrong.');
-          break;
         }
       } catch (err) {
         allSuccess = false;
         toast.error('Failed to connect to server.');
-        break;
       }
     }
     if (allSuccess) {
