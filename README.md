@@ -35,16 +35,19 @@ guest-parking/
 
 - Built with [Vite](https://vitejs.dev/) + [React](https://react.dev/)
 - Deployed via [AWS Amplify](https://aws.amazon.com/amplify/)
-- Uses `react-hot-toast`, `clsx`, `tailwindcss`, and `react-datepicker`
+- Uses `react-hot-toast`, `clsx`, `tailwindcss`, `react-datepicker`, `react-big-calendar`, and `@heroicons/react`
 
 ### Features
 
-✅ **NEW** Actually has a UI that's had a little bit of thought put into it!  
-✅ **NEW** Services more than just weekends! Book spots for a single day all week OR for a full weekend at once.  
-✅ View available spots dynamically  
-✅ Email confirmations for users  
-✅ Admin view with a calendar and booking list with delete functionality  
-✅ CORS-safe, responsive, and toast-notified!
+✅ **Modern UI** - Beautiful, responsive design with Tailwind CSS and Heroicons  
+✅ **Flexible Booking** - Book spots for single days OR full weekends with a toggle  
+✅ **Smart Calendar** - Interactive calendar picker for any date selection  
+✅ **Dynamic Availability** - Real-time spot availability checking  
+✅ **Admin Dashboard** - Modern calendar grid view with clickable events and grouped booking management  
+✅ **Email Confirmations** - Automated booking confirmations via Resend  
+✅ **Maintenance Mode** - Easy site maintenance with environment variable toggle  
+✅ **Mobile Responsive** - Works perfectly on all devices  
+✅ **Toast Notifications** - User-friendly feedback for all actions
 
 ## 🛠️ Backend
 
@@ -52,15 +55,21 @@ guest-parking/
 - Runs on [AWS Lambda](https://aws.amazon.com/lambda/)
 - Uses [Supabase](https://supabase.com/) for PostgreSQL
 - Email sending powered by [Resend](https://resend.com/)
+- Supports both single-day and weekend batch bookings
+- Includes database connection retry logic for reliability
+- Health check endpoint for monitoring
 
 ### API Endpoints
 
 | Method | Endpoint                     | Description                         |
 |--------|------------------------------|-------------------------------------|
 | GET    | `/api/bookings`              | Get all bookings (admin)            |
-| GET    | `/api/bookings/availability` | Check available spots for a weekend |
-| POST   | `/api/bookings`              | Create a new booking                |
+| GET    | `/api/bookings/availability` | Check available spots for a date    |
+| POST   | `/api/bookings`              | Create a single-day booking         |
+| POST   | `/api/bookings/batch`        | Create multiple bookings (weekend)  |
 | DELETE | `/api/bookings/:id`          | Delete a booking (admin only)       |
+| GET    | `/api/bookings/ping`         | Health check endpoint               |
+| GET    | `/api/bookings/test-email`   | Test email functionality (dev only) |
 
 ## 🗄️ Database Setup
 
