@@ -1,13 +1,13 @@
 # 🚗 Guest Parking App
 
-[![Demo](https://img.shields.io/badge/Demo-Live%20Site-blue?style=for-the-badge&logo=aws)](https://main.db9w562prht4f.amplifyapp.com/)
+[![Demo](https://img.shields.io/badge/Demo-Live%20Site-ff00ff?style=for-the-badge)](https://main.db9w562prht4f.amplifyapp.com/)
 
-[![Frontend](https://img.shields.io/badge/Frontend-React-blue?style=flat-square&logo=react)](https://react.dev/)
-[![Backend](https://img.shields.io/badge/Backend-Express.js-green?style=flat-square&logo=express)](https://expressjs.com/)
-[![Database](https://img.shields.io/badge/Database-PostgreSQL-blue?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
-[![Infrastructure](https://img.shields.io/badge/Infrastructure-AWS-orange?style=flat-square&logo=amazonaws)](https://aws.amazon.com/)
-[![Deployment](https://img.shields.io/badge/Deployment-Amplify-purple?style=flat-square&logo=awsamplify)](https://aws.amazon.com/amplify/)
-[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Frontend](https://img.shields.io/badge/Frontend-React-blue?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
+[![Backend](https://img.shields.io/badge/Backend-Express.js-green?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
+[![Database](https://img.shields.io/badge/Database-PostgreSQL-blue?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Infrastructure](https://img.shields.io/badge/Infrastructure-Terraform-orange?style=flat-square&logo=hashicorp&logoColor=white)](https://www.hashicorp.com/en/products/terraform)
+[![Hosting](https://img.shields.io/badge/Hosting-Amplify_+_Lambda-yellow?style=flat-square)](https://aws.amazon.com)
+[![License](https://img.shields.io/badge/License-MIT-white?style=flat-square)](https://opensource.org/licenses/MIT)
 
 A full-stack web app that allows condo residents to book guest parking spots for single days or entire weekends, with a clean admin interface, email confirmations, and AWS-powered infrastructure.
 
