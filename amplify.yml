@@ -18,10 +18,13 @@ applications:
               fi
         build:
           commands:
-            - echo "🧪 Running frontend tests..."
-            - npm run test:run
+            - echo "🧪 Running frontend tests with coverage..."
+            - npm run test:coverage
+            - echo "📊 Coverage report generated"
             - echo "🏗️ Building frontend..."
             - npm run build
+            - echo "📁 Copying coverage reports to build directory..."
+            - cp -r coverage dist/coverage
       artifacts:
         baseDirectory: dist
         files:
