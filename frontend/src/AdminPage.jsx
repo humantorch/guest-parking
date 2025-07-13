@@ -43,7 +43,6 @@ function formatWeekendRange(fridayStr) {
 
 export default function AdminPage() {
   const ADMIN_PASSWORD = import.meta.env.VITE_REACT_APP_ADMIN_PASSWORD;
-  console.log('ADMIN_PASSWORD in AdminPage:', ADMIN_PASSWORD, typeof ADMIN_PASSWORD);
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const [bookings, setBookings] = useState([]);
