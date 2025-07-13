@@ -177,7 +177,12 @@ export default function GuestParkingBookingApp() {
         const data = await res.json();
         if (!res.ok) {
           allSuccess = false;
-          toast.error(data.error || 'Something went wrong.');
+          if (data.error === 'Validation failed' && Array.isArray(data.details)) {
+            const messages = data.details.map(d => d.message).join('\n');
+            toast.error(messages);
+          } else {
+            toast.error(data.error || 'Something went wrong.');
+          }
         }
       } catch (err) {
         allSuccess = false;
@@ -195,7 +200,12 @@ export default function GuestParkingBookingApp() {
         const data = await res.json();
         if (!res.ok) {
           allSuccess = false;
-          toast.error(data.error || 'Something went wrong.');
+          if (data.error === 'Validation failed' && Array.isArray(data.details)) {
+            const messages = data.details.map(d => d.message).join('\n');
+            toast.error(messages);
+          } else {
+            toast.error(data.error || 'Something went wrong.');
+          }
         }
       } catch (err) {
         allSuccess = false;
@@ -360,6 +370,9 @@ export default function GuestParkingBookingApp() {
           <div className="flex items-center gap-2 mb-2">
             <UserIcon className="w-5 h-5 text-indigo-500" />
             <span className="font-semibold text-lg text-indigo-800">Guest Information</span>
+          </div>
+          <div className="mb-2 text-sm text-red-600 font-semibold">
+            All fields are required.
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleInputChange} />

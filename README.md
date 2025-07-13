@@ -54,9 +54,17 @@ guest-parking/
 - Runs on [AWS Lambda](https://aws.amazon.com/lambda/)
 - Uses [Supabase](https://supabase.com/) for PostgreSQL
 - Email sending powered by [Resend](https://resend.com/)
-- Supports both single-day and weekend batch bookings
-- Includes database connection retry logic for reliability
-- Health check endpoint for monitoring
+
+### Features
+
+✅ **Flexible Bookings** - Supports both single-day and weekend batch bookings  
+✅ **Database Reliability** - Includes connection retry logic for reliability  
+✅ **Health Monitoring** - Health check endpoint for monitoring  
+✅ **Input Validation** - Comprehensive validation with express-validator  
+✅ **Rate Limiting** - Prevents abuse with configurable limits  
+✅ **Security Headers** - Protection with Helmet middleware  
+✅ **Input Sanitization** - XSS prevention and data cleaning  
+✅ **Email Integration** - Automated confirmations via Resend
 
 ### API Endpoints
 
@@ -69,6 +77,25 @@ guest-parking/
 | DELETE | `/api/bookings/:id`          | Delete a booking (admin only)       |
 | GET    | `/api/bookings/ping`         | Health check endpoint               |
 | GET    | `/api/bookings/test-email`   | Test email functionality (dev only) |
+
+### Validation Rules
+
+The API includes comprehensive input validation:
+
+- **Date**: Must be valid ISO date, not in the past, max 6 months in advance
+- **Spot Number**: Integer between 1-7
+- **Names**: Letters, spaces, hyphens, apostrophes only (1-50 chars)
+- **Unit Number**: Alphanumeric with hyphens (1-10 chars)
+- **Email**: Valid email format, normalized
+- **Guest Name**: Letters, spaces, hyphens, apostrophes only (1-100 chars)
+- **Vehicle Type**: Letters, spaces, hyphens, apostrophes only (1-50 chars)
+- **License Plate**: Uppercase letters, numbers, hyphens, spaces only (1-20 chars)
+
+### Rate Limiting
+
+- **Booking endpoints**: 5 requests per 15 minutes per IP
+- **Admin endpoints**: 10 requests per 15 minutes per IP
+- **Availability checks**: 30 requests per minute per IP
 
 ## 🗄️ Database Setup
 

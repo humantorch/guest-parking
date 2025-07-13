@@ -3,6 +3,19 @@ const getPool = require('../db');
 const pool = getPool();
 const router = express.Router();
 const { Resend } = require('resend');
+const {
+  bookingValidationRules,
+  batchBookingValidationRules,
+  availabilityValidationRules,
+  deleteValidationRules,
+  handleValidationErrors,
+  sanitizeInput
+} = require('../middleware/validation');
+const {
+  bookingLimiter,
+  adminLimiter,
+  availabilityLimiter
+} = require('../middleware/security');
 
 async function safeQuery(query, values = [], retries = 2) {
   try {
@@ -38,24 +51,31 @@ router.get('/test-email', async (req, res) => {
 });
 
 // Get available spots for a weekend
-router.get('/availability', async (req, res) => {
-  const { date } = req.query;
-  try {
-    const result = await safeQuery(
-      'SELECT spot_number FROM bookings WHERE date = $1',
-      [date]
-    );
-    const bookedSpots = result.rows.map(r => r.spot_number);
-    const allSpots = [1, 2, 3, 4, 5, 6, 7];
-    const availableSpots = allSpots.filter(s => !bookedSpots.includes(s));
-    return res.json({ availableSpots });
-  } catch (err) {
-    return res.status(500).json({ error: 'Database error', details: err.message });
+router.get('/availability', 
+  availabilityLimiter,
+  availabilityValidationRules,
+  handleValidationErrors,
+  async (req, res) => {
+    const { date } = req.query;
+    try {
+      const result = await safeQuery(
+        'SELECT spot_number FROM bookings WHERE date = $1',
+        [date]
+      );
+      const bookedSpots = result.rows.map(r => r.spot_number);
+      const allSpots = [1, 2, 3, 4, 5, 6, 7];
+      const availableSpots = allSpots.filter(s => !bookedSpots.includes(s));
+      return res.json({ availableSpots });
+    } catch (err) {
+      return res.status(500).json({ error: 'Database error', details: err.message });
+    }
   }
-});
+);
 
 // Get all bookings (for admin)
-router.get('/', async (req, res) => {
+router.get('/', 
+  adminLimiter,
+  async (req, res) => {
   try {
     const result = await safeQuery(
       `SELECT * FROM bookings ORDER BY date DESC, spot_number ASC`
@@ -68,46 +88,51 @@ router.get('/', async (req, res) => {
 });
 
 // DELETE /api/bookings/:id
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await safeQuery('DELETE FROM bookings WHERE id = $1', [id]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'Booking not found' });
+router.delete('/:id', 
+  adminLimiter,
+  deleteValidationRules,
+  handleValidationErrors,
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const result = await safeQuery('DELETE FROM bookings WHERE id = $1', [id]);
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: 'Booking not found' });
+      }
+      return res.json({ message: 'Booking deleted successfully' });
+    } catch (err) {
+      console.error('Error deleting booking:', err);
+      return res.status(500).json({ error: 'Internal server error' });
     }
-    return res.json({ message: 'Booking deleted successfully' });
-  } catch (err) {
-    console.error('Error deleting booking:', err);
-    return res.status(500).json({ error: 'Internal server error' });
   }
-});
+);
 
 // Book a spot
-router.post('/', async (req, res) => {
-  const {
-    date, spot_number, first_name, last_name,
-    unit_number, email, guest_name, vehicle_type, license_plate
-  } = req.body;
+router.post('/', 
+  bookingLimiter,
+  sanitizeInput,
+  bookingValidationRules,
+  handleValidationErrors,
+  async (req, res) => {
+    const {
+      date, spot_number, first_name, last_name,
+      unit_number, email, guest_name, vehicle_type, license_plate
+    } = req.body;
 
-  // ✅ Basic validation
-  if (!date || !spot_number || !first_name || !email) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
+    const floor = spot_number <= 4 ? " (P1)" : " (P2)";
 
-  const floor = spot_number <= 4 ? " (P1)" : " (P2)";
-
-  try {
-    // Insert
-    await safeQuery(
-      `INSERT INTO bookings (
-        date, spot_number, first_name, last_name,
-        unit_number, email, guest_name, vehicle_type, license_plate
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
-      [
-        date, spot_number, first_name, last_name,
-        unit_number, email, guest_name, vehicle_type, license_plate
-      ]
-    );
+    try {
+      // Insert
+      await safeQuery(
+        `INSERT INTO bookings (
+          date, spot_number, first_name, last_name,
+          unit_number, email, guest_name, vehicle_type, license_plate
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+        [
+          date, spot_number, first_name, last_name,
+          unit_number, email, guest_name, vehicle_type, license_plate
+        ]
+      );
 
     try {
       const result = await resend.emails.send({
@@ -146,16 +171,17 @@ router.post('/', async (req, res) => {
 });
 
 // Batch booking for full weekend
-router.post('/batch', async (req, res) => {
-  const {
-    dates, // array of date strings
-    spot_number, first_name, last_name,
-    unit_number, email, guest_name, vehicle_type, license_plate
-  } = req.body;
-
-  if (!dates || !Array.isArray(dates) || dates.length === 0 || !spot_number || !first_name || !email) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
+router.post('/batch', 
+  bookingLimiter,
+  sanitizeInput,
+  batchBookingValidationRules,
+  handleValidationErrors,
+  async (req, res) => {
+    const {
+      dates, // array of date strings
+      spot_number, first_name, last_name,
+      unit_number, email, guest_name, vehicle_type, license_plate
+    } = req.body;
 
   const client = await pool.connect();
   try {

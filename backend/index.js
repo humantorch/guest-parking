@@ -1,7 +1,16 @@
 const express = require('express');
+const { 
+  securityHeaders, 
+  sanitizeInputs, 
+  limitRequestSize, 
+  validateContentType 
+} = require('./middleware/security');
 require('dotenv').config();
 
 const app = express();
+
+// ✅ Security headers middleware
+app.use(securityHeaders);
 
 // ✅ CORS middleware — MOVE THIS FIRST
 app.use((req, res, next) => {
@@ -33,6 +42,15 @@ app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.originalUrl}`);
   next();
 });
+
+// ✅ Request size limiting
+app.use(limitRequestSize);
+
+// ✅ Content type validation
+app.use(validateContentType);
+
+// ✅ Input sanitization
+app.use(sanitizeInputs);
 
 // ✅ Parse incoming JSON
 app.use(express.json());
