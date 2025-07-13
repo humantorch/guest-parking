@@ -1,6 +1,24 @@
 # 🚗 Guest Parking App
 
+[![Demo](https://img.shields.io/badge/Demo-Live%20Site-blue?style=for-the-badge&logo=aws)](https://main.db9w562prht4f.amplifyapp.com/)
+
+[![Frontend](https://img.shields.io/badge/Frontend-React-blue?style=flat-square&logo=react)](https://react.dev/)
+[![Backend](https://img.shields.io/badge/Backend-Express.js-green?style=flat-square&logo=express)](https://expressjs.com/)
+[![Database](https://img.shields.io/badge/Database-PostgreSQL-blue?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
+[![Infrastructure](https://img.shields.io/badge/Infrastructure-AWS-orange?style=flat-square&logo=amazonaws)](https://aws.amazon.com/)
+[![Deployment](https://img.shields.io/badge/Deployment-Amplify-purple?style=flat-square&logo=awsamplify)](https://aws.amazon.com/amplify/)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](https://opensource.org/licenses/MIT)
+
 A full-stack web app that allows condo residents to book guest parking spots for single days or entire weekends, with a clean admin interface, email confirmations, and AWS-powered infrastructure.
+
+## 🌐 Live Demo
+
+**Demo Site:** [https://main.db9w562prht4f.amplifyapp.com/](https://main.db9w562prht4f.amplifyapp.com/)
+
+**Admin Access:** [https://main.db9w562prht4f.amplifyapp.com/admin](https://main.db9w562prht4f.amplifyapp.com/admin)  
+**Admin Password:** `demo123`
+
+> ⚠️ **Note:** The demo is running on Resend's free tier, so email confirmations will not be sent. All other functionality works normally.
 
 ## 📁 Project Structure
 
@@ -22,7 +40,7 @@ guest-parking/
 ### Features
 
 ✅ **NEW** Actually has a UI that's had a little bit of thought put into it!  
-✅ **NEW** Services more than just weekends! Book spots for a single day all week OR for a full weekend at once. 
+✅ **NEW** Services more than just weekends! Book spots for a single day all week OR for a full weekend at once.  
 ✅ View available spots dynamically  
 ✅ Email confirmations for users  
 ✅ Admin view with a calendar and booking list with delete functionality  
