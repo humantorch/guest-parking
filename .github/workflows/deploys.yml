@@ -26,10 +26,18 @@ jobs:
           cd backend
           npm ci
 
+      - name: Run backend tests
+        run: |
+          cd backend
+          echo "🧪 Running backend tests..."
+          npm test
+          echo "📊 Running test coverage..."
+          npm run test:coverage
+
       - name: Create deployment zip
         run: |
           cd backend
-          zip -r ../backend.zip . -x "*.git*" ".github/*" "terraform/*"
+          zip -r ../backend.zip . -x "*.git*" ".github/*" "terraform/*" "tests/*" "coverage/*"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2

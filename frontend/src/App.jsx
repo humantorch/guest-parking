@@ -26,7 +26,7 @@ export default function GuestParkingBookingApp() {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [bookingType, setBookingType] = useState('single'); // 'single' or 'weekend'
-  const [availableSpots, setAvailableSpots] = useState([]);
+  const [availableSpots, setAvailableSpots] = useState([1, 2, 3, 4, 5, 6, 7]); // Initialize with all spots available
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -76,7 +76,7 @@ export default function GuestParkingBookingApp() {
         );
         const data = await res.json();
         if (res.ok) {
-          setAvailableSpots(data.availableSpots);
+          setAvailableSpots(data.availableSpots || []);
         } else {
           setAvailableSpots([]);
         }

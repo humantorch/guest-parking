@@ -1,0 +1,1211 @@
+
+> guest-parking-app@0.0.1 test
+> vitest
+
+
+ DEV  v3.2.4 /Users/scott/Documents/Projects/guest-parking/frontend
+
+ ❯ src/test/App.test.jsx (12 tests | 6 failed) 5203ms
+   ✓ GuestParkingBookingApp > Initial Render > should render the main booking form 29ms
+   ✓ GuestParkingBookingApp > Initial Render > should render all form fields 7ms
+   ✓ GuestParkingBookingApp > Initial Render > should render spot selection buttons 10ms
+   ✓ GuestParkingBookingApp > Form Validation > should show error when trying to submit without selecting a spot 19ms
+   × GuestParkingBookingApp > Form Validation > should show error when trying to submit with empty required fields 1031ms
+     → expected "spy" to be called with arguments: [ Array(1) ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[2m  [[22m
+[32m-   "Please fill in all required fields.",[90m
+[31m+   "Please select a spot.",[90m
+[2m  ][22m
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mBook Guest Parking[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mReserve a spot for your guest—quick, easy, and instant confirmation.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-xl bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-8"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2 mb-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"calendar-icon"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-semibold text-lg text-indigo-800"[39m
+              [36m>[39m
+                [0mSelect Date[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<input[39m
+              [33mdata-testid[39m=[32m"datepicker"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-sm text-gray-600 mt-1"[39m
+            [36m>[39m
+              [0mWeekend: [0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-4"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"font-semibold text-indigo-800"[39m
+            [36m>[39m
+              [0mBooking Type:[0m
+            [36m</span>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex gap-4 opacity-50 pointer-events-none select-none"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"radio"[39m
+                  [33mvalue[39m=[32m"single"[39m
+                [36m/>[39m
+                [0mOnly this day[0m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"radio"[39m
+                  [33mvalue[39m=[32m"weekend"[39m
+                [36m/>[39m
+                [0mFull weekend (Fri–Sun)[0m
+              [36m</label>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<hr[39m
+            [33mclass[39m=[32m"my-2 border-gray-200"[39m
+          [36m/>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2 mb-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"truck-icon"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-semibold text-lg text-indigo-800"[39m
+              [36m>[39m
+                [0mSelect Spot[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col gap-4"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"font-semibold mb-2 text-gray-700"[39m
+                [36m>[39m
+                  [0mLevel P1 (Spots 1–4)[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex gap-2 flex-wrap"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m1[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m2[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m3[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m4[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"font-semibold mb-2 text-gray-700"[39m
+                [36m>[39m
+                  [0mLevel P2 (Spots 5–7)[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex gap-2 flex-wrap"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m5[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hov...
+   × GuestParkingBookingApp > Form Validation > should show error for invalid email format 1026ms
+     → expected "spy" to be called with arguments: [ Array(1) ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[2m  [[22m
+[32m-   "Please enter a valid email address.",[90m
+[31m+   "Please select a spot.",[90m
+[2m  ][22m
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mBook Guest Parking[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mReserve a spot for your guest—quick, easy, and instant confirmation.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-xl bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-8"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2 mb-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"calendar-icon"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-semibold text-lg text-indigo-800"[39m
+              [36m>[39m
+                [0mSelect Date[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<input[39m
+              [33mdata-testid[39m=[32m"datepicker"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-sm text-gray-600 mt-1"[39m
+            [36m>[39m
+              [0mWeekend: [0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-4"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"font-semibold text-indigo-800"[39m
+            [36m>[39m
+              [0mBooking Type:[0m
+            [36m</span>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex gap-4 opacity-50 pointer-events-none select-none"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"radio"[39m
+                  [33mvalue[39m=[32m"single"[39m
+                [36m/>[39m
+                [0mOnly this day[0m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"radio"[39m
+                  [33mvalue[39m=[32m"weekend"[39m
+                [36m/>[39m
+                [0mFull weekend (Fri–Sun)[0m
+              [36m</label>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<hr[39m
+            [33mclass[39m=[32m"my-2 border-gray-200"[39m
+          [36m/>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2 mb-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"truck-icon"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-semibold text-lg text-indigo-800"[39m
+              [36m>[39m
+                [0mSelect Spot[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col gap-4"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"font-semibold mb-2 text-gray-700"[39m
+                [36m>[39m
+                  [0mLevel P1 (Spots 1–4)[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex gap-2 flex-wrap"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m1[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m2[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m3[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m4[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"font-semibold mb-2 text-gray-700"[39m
+                [36m>[39m
+                  [0mLevel P2 (Spots 5–7)[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex gap-2 flex-wrap"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m5[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hov...
+   × GuestParkingBookingApp > API Integration > should handle successful booking submission 1026ms
+     → expected "spy" to be called 2 times, but got 1 times
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mBook Guest Parking[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mReserve a spot for your guest—quick, easy, and instant confirmation.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-xl bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-8"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2 mb-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"calendar-icon"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-semibold text-lg text-indigo-800"[39m
+              [36m>[39m
+                [0mSelect Date[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<input[39m
+              [33mdata-testid[39m=[32m"datepicker"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-sm text-gray-600 mt-1"[39m
+            [36m>[39m
+              [0mWeekend: [0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-4"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"font-semibold text-indigo-800"[39m
+            [36m>[39m
+              [0mBooking Type:[0m
+            [36m</span>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex gap-4 opacity-50 pointer-events-none select-none"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"radio"[39m
+                  [33mvalue[39m=[32m"single"[39m
+                [36m/>[39m
+                [0mOnly this day[0m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"radio"[39m
+                  [33mvalue[39m=[32m"weekend"[39m
+                [36m/>[39m
+                [0mFull weekend (Fri–Sun)[0m
+              [36m</label>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<hr[39m
+            [33mclass[39m=[32m"my-2 border-gray-200"[39m
+          [36m/>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2 mb-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"truck-icon"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-semibold text-lg text-indigo-800"[39m
+              [36m>[39m
+                [0mSelect Spot[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col gap-4"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"font-semibold mb-2 text-gray-700"[39m
+                [36m>[39m
+                  [0mLevel P1 (Spots 1–4)[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex gap-2 flex-wrap"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m1[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m2[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m3[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m4[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"font-semibold mb-2 text-gray-700"[39m
+                [36m>[39m
+                  [0mLevel P2 (Spots 5–7)[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex gap-2 flex-wrap"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m5[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hov...
+   × GuestParkingBookingApp > API Integration > should handle validation errors from API 1017ms
+     → expected "spy" to be called with arguments: [ Array(1) ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[2m  [[22m
+[32m-   "Cannot book dates in the past[90m
+[32m- Email must be a valid email address",[90m
+[31m+   "Please select a spot.",[90m
+[2m  ][22m
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div />[39m
+  [36m</body>[39m
+[36m</html>[39m...
+   × GuestParkingBookingApp > API Integration > should handle network errors 1021ms
+     → expected "spy" to be called with arguments: [ 'Failed to connect to server.' ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[2m  [[22m
+[32m-   "Failed to connect to server.",[90m
+[31m+   "Please select a spot.",[90m
+[2m  ][22m
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mBook Guest Parking[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mReserve a spot for your guest—quick, easy, and instant confirmation.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-xl bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-8"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2 mb-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"calendar-icon"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-semibold text-lg text-indigo-800"[39m
+              [36m>[39m
+                [0mSelect Date[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<input[39m
+              [33mdata-testid[39m=[32m"datepicker"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-sm text-gray-600 mt-1"[39m
+            [36m>[39m
+              [0mWeekend: [0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-4"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"font-semibold text-indigo-800"[39m
+            [36m>[39m
+              [0mBooking Type:[0m
+            [36m</span>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex gap-4 opacity-50 pointer-events-none select-none"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"radio"[39m
+                  [33mvalue[39m=[32m"single"[39m
+                [36m/>[39m
+                [0mOnly this day[0m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"radio"[39m
+                  [33mvalue[39m=[32m"weekend"[39m
+                [36m/>[39m
+                [0mFull weekend (Fri–Sun)[0m
+              [36m</label>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<hr[39m
+            [33mclass[39m=[32m"my-2 border-gray-200"[39m
+          [36m/>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2 mb-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"truck-icon"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-semibold text-lg text-indigo-800"[39m
+              [36m>[39m
+                [0mSelect Spot[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col gap-4"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"font-semibold mb-2 text-gray-700"[39m
+                [36m>[39m
+                  [0mLevel P1 (Spots 1–4)[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex gap-2 flex-wrap"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m1[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m2[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m3[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m4[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"font-semibold mb-2 text-gray-700"[39m
+                [36m>[39m
+                  [0mLevel P2 (Spots 5–7)[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex gap-2 flex-wrap"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hover:bg-blue-100 border-green-400 text-green-700 hover:bg-green-50  px-4 py-2 rounded-lg font-semibold transition"[39m
+                  [36m>[39m
+                    [0mSpot [0m
+                    [0m5[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"px-4 py-2 rounded font-semibold border border-blue-600 text-blue-600 hov...
+   × GuestParkingBookingApp > Spot Selection > should allow selecting available spots 7ms
+     → expected 'px-4 py-2 rounded font-semibold borde…' to match /ring-2/
+   ✓ GuestParkingBookingApp > Spot Selection > should disable unavailable spots 4ms
+   ✓ GuestParkingBookingApp > Booking Type Toggle > should show weekend booking option for weekend dates 4ms
+ ❯ src/test/AdminPage.test.jsx (10 tests | 8 failed) 8096ms
+   ✓ AdminPage > Authentication > should show login form when not authenticated 18ms
+   × AdminPage > Authentication > should authenticate with correct password 1016ms
+     → [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <h1
+  class="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"
+>
+  <div
+    data-testid="calendar-icon"
+  />
+  Admin Login
+</h1> instead[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mAdmin Login[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mEnter the admin password to view and manage all bookings.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"border p-2 rounded w-full mb-2"[39m
+            [33mplaceholder[39m=[32m"Enter password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"test123"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"px-4 py-2 rounded font-semibold bg-blue-600 text-white hover:bg-blue-700 w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"[39m
+          [36m>[39m
+            [0mLogin[0m
+          [36m</button>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-red-600 mt-2"[39m
+          [36m>[39m
+            [0mIncorrect password[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m...
+   ✓ AdminPage > Authentication > should show error with incorrect password 4ms
+   × AdminPage > Authentication > should handle Enter key for login 1006ms
+     → [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <h1
+  class="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"
+>
+  <div
+    data-testid="calendar-icon"
+  />
+  Admin Login
+</h1> instead[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mAdmin Login[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mEnter the admin password to view and manage all bookings.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"border p-2 rounded w-full mb-2"[39m
+            [33mplaceholder[39m=[32m"Enter password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"test123"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"px-4 py-2 rounded font-semibold bg-blue-600 text-white hover:bg-blue-700 w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"[39m
+          [36m>[39m
+            [0mLogin[0m
+          [36m</button>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-red-600 mt-2"[39m
+          [36m>[39m
+            [0mIncorrect password[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m...
+   × AdminPage > Admin Dashboard > should display bookings after authentication 1007ms
+     → [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <h1
+  class="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"
+>
+  <div
+    data-testid="calendar-icon"
+  />
+  Admin Login
+</h1> instead[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mAdmin Login[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mEnter the admin password to view and manage all bookings.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"border p-2 rounded w-full mb-2"[39m
+            [33mplaceholder[39m=[32m"Enter password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"test123"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"px-4 py-2 rounded font-semibold bg-blue-600 text-white hover:bg-blue-700 w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"[39m
+          [36m>[39m
+            [0mLogin[0m
+          [36m</button>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-red-600 mt-2"[39m
+          [36m>[39m
+            [0mIncorrect password[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m...
+   × AdminPage > Admin Dashboard > should show calendar view 1008ms
+     → [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <h1
+  class="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"
+>
+  <div
+    data-testid="calendar-icon"
+  />
+  Admin Login
+</h1> instead[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mAdmin Login[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mEnter the admin password to view and manage all bookings.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"border p-2 rounded w-full mb-2"[39m
+            [33mplaceholder[39m=[32m"Enter password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"test123"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"px-4 py-2 rounded font-semibold bg-blue-600 text-white hover:bg-blue-700 w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"[39m
+          [36m>[39m
+            [0mLogin[0m
+          [36m</button>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-red-600 mt-2"[39m
+          [36m>[39m
+            [0mIncorrect password[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m...
+   × AdminPage > Admin Dashboard > should show list view 1007ms
+     → [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <h1
+  class="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"
+>
+  <div
+    data-testid="calendar-icon"
+  />
+  Admin Login
+</h1> instead[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mAdmin Login[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mEnter the admin password to view and manage all bookings.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"border p-2 rounded w-full mb-2"[39m
+            [33mplaceholder[39m=[32m"Enter password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"test123"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"px-4 py-2 rounded font-semibold bg-blue-600 text-white hover:bg-blue-700 w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"[39m
+          [36m>[39m
+            [0mLogin[0m
+          [36m</button>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-red-600 mt-2"[39m
+          [36m>[39m
+            [0mIncorrect password[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m...
+   × AdminPage > Admin Dashboard > should handle booking deletion 1009ms
+     → [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <h1
+  class="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"
+>
+  <div
+    data-testid="calendar-icon"
+  />
+  Admin Login
+</h1> instead[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mAdmin Login[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mEnter the admin password to view and manage all bookings.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"border p-2 rounded w-full mb-2"[39m
+            [33mplaceholder[39m=[32m"Enter password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"test123"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"px-4 py-2 rounded font-semibold bg-blue-600 text-white hover:bg-blue-700 w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"[39m
+          [36m>[39m
+            [0mLogin[0m
+          [36m</button>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-red-600 mt-2"[39m
+          [36m>[39m
+            [0mIncorrect password[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m...
+   × AdminPage > Admin Dashboard > should handle fetch errors gracefully 1010ms
+     → [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <h1
+  class="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"
+>
+  <div
+    data-testid="calendar-icon"
+  />
+  Admin Login
+</h1> instead[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mAdmin Login[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mEnter the admin password to view and manage all bookings.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"border p-2 rounded w-full mb-2"[39m
+            [33mplaceholder[39m=[32m"Enter password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"test123"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"px-4 py-2 rounded font-semibold bg-blue-600 text-white hover:bg-blue-700 w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"[39m
+          [36m>[39m
+            [0mLogin[0m
+          [36m</button>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-red-600 mt-2"[39m
+          [36m>[39m
+            [0mIncorrect password[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m...
+   × AdminPage > View Toggle > should switch between calendar and list views 1010ms
+     → [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <h1
+  class="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"
+>
+  <div
+    data-testid="calendar-icon"
+  />
+  Admin Login
+</h1> instead[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex flex-col items-center justify-start py-8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mb-8 text-center"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-extrabold text-indigo-900 mb-2 flex items-center justify-center gap-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"calendar-icon"[39m
+            [36m/>[39m
+            [0mAdmin Login[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-gray-600 max-w-xl mx-auto"[39m
+          [36m>[39m
+            [0mEnter the admin password to view and manage all bookings.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"border p-2 rounded w-full mb-2"[39m
+            [33mplaceholder[39m=[32m"Enter password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m"test123"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"px-4 py-2 rounded font-semibold bg-blue-600 text-white hover:bg-blue-700 w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"[39m
+          [36m>[39m
+            [0mLogin[0m
+          [36m</button>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-red-600 mt-2"[39m
+          [36m>[39m
+            [0mIncorrect password[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m...
+
+ Test Files  2 failed (2)
+      Tests  14 failed | 8 passed (22)
+     Errors  1 error
+   Start at  19:37:53
+   Duration  8.94s (transform 250ms, setup 134ms, collect 574ms, tests 13.30s, environment 489ms, prepare 108ms)
+
+ FAIL  Tests failed. Watching for file changes...
+       press h to show help, press q to quit

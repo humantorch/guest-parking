@@ -150,10 +150,80 @@ const batchBookingValidationRules = [
       return true;
     }),
 
-  // Reuse other validation rules from bookingValidationRules
-  ...bookingValidationRules.filter(rule => 
-    rule.field !== 'date' // Exclude date validation since we handle it in dates array
-  )
+  // Spot number validation
+  body('spot_number')
+    .notEmpty()
+    .withMessage('Spot number is required')
+    .isInt({ min: 1, max: 7 })
+    .withMessage('Spot number must be between 1 and 7'),
+
+  // Name validation
+  body('first_name')
+    .notEmpty()
+    .withMessage('First name is required')
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('First name must be between 1 and 50 characters')
+    .matches(/^[a-zA-Z\s\-']+$/)
+    .withMessage('First name can only contain letters, spaces, hyphens, and apostrophes'),
+
+  body('last_name')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Last name must be 50 characters or less')
+    .matches(/^[a-zA-Z\s\-']*$/)
+    .withMessage('Last name can only contain letters, spaces, hyphens, and apostrophes'),
+
+  // Unit number validation
+  body('unit_number')
+    .notEmpty()
+    .withMessage('Unit number is required')
+    .trim()
+    .isLength({ min: 1, max: 10 })
+    .withMessage('Unit number must be between 1 and 10 characters')
+    .matches(/^[a-zA-Z0-9\-]+$/)
+    .withMessage('Unit number can only contain letters, numbers, and hyphens'),
+
+  // Email validation
+  body('email')
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Email must be a valid email address')
+    .normalizeEmail()
+    .isLength({ max: 254 })
+    .withMessage('Email must be 254 characters or less'),
+
+  // Guest name validation
+  body('guest_name')
+    .notEmpty()
+    .withMessage('Guest name is required')
+    .trim()
+    .isLength({ min: 1, max: 100 })
+    .withMessage('Guest name must be between 1 and 100 characters')
+    .matches(/^[a-zA-Z\s\-']+$/)
+    .withMessage('Guest name can only contain letters, spaces, hyphens, and apostrophes'),
+
+  // Vehicle type validation
+  body('vehicle_type')
+    .notEmpty()
+    .withMessage('Vehicle type is required')
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Vehicle type must be between 1 and 50 characters')
+    .matches(/^[a-zA-Z\s\-']+$/)
+    .withMessage('Vehicle type can only contain letters, spaces, hyphens, and apostrophes'),
+
+  // License plate validation
+  body('license_plate')
+    .notEmpty()
+    .withMessage('License plate is required')
+    .trim()
+    .isLength({ min: 1, max: 20 })
+    .withMessage('License plate must be between 1 and 20 characters')
+    .matches(/^[A-Z0-9\-\s]+$/)
+    .withMessage('License plate can only contain uppercase letters, numbers, hyphens, and spaces')
 ];
 
 // Validation rules for availability query

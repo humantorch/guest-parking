@@ -268,6 +268,109 @@ npm install
 node index.js
 ```
 
+## 🧪 Testing
+
+This project includes comprehensive test suites for both frontend and backend with excellent coverage.
+
+### Test Coverage Summary
+
+| Component | Statements | Branches | Functions | Lines |
+|-----------|------------|----------|-----------|-------|
+| **Backend** | 80.44% | 67.64% | 85.18% | 80.81% |
+| **Frontend** | 73.18% | 65.13% | 56.25% | 73.18% |
+
+### Backend Tests
+
+The backend includes comprehensive validation and API endpoint tests with mocked database and email services.
+
+```bash
+cd backend
+npm test                    # Run all tests
+npm run test:watch         # Run tests in watch mode
+npm run test:coverage      # Run tests with coverage report
+npm run test:validation    # Run only validation tests
+npm run test:api           # Run only API tests
+```
+
+#### Backend Test Coverage
+
+- **API Endpoints**: All CRUD operations, validation, error handling
+- **Validation Middleware**: Input sanitization, field validation, custom rules
+- **Security Middleware**: CORS, rate limiting, request size limits
+- **Database Operations**: Connection handling, transactions, error scenarios
+- **Email Integration**: Mocked Resend email service
+
+#### Test Types
+
+- **Validation Tests**: Field validation, edge cases, error messages
+- **API Tests**: Endpoint functionality, response codes, data integrity
+- **Integration Tests**: Database operations, email sending
+- **Error Handling**: Database failures, validation errors, rate limiting
+
+### Frontend Tests
+
+The frontend uses Vitest with React Testing Library for component and integration testing.
+
+```bash
+cd frontend
+npm test                   # Run tests in watch mode
+npm run test:run          # Run tests once
+npm run test:coverage     # Run tests with coverage report
+```
+
+#### Frontend Test Coverage
+
+- **Component Rendering**: All pages and UI components
+- **Form Validation**: Required fields, error messages, user interactions
+- **API Integration**: Mocked fetch calls, loading states, error handling
+- **User Flows**: Complete booking process, admin authentication
+- **Edge Cases**: Invalid inputs, network errors, disabled states
+
+#### Test Types
+
+- **Unit Tests**: Individual component functionality
+- **Integration Tests**: Form submissions, API calls
+- **User Interaction Tests**: Button clicks, form inputs, navigation
+- **Error Handling**: Validation errors, network failures
+
+### Test Features
+
+✅ **Comprehensive Coverage**: Both frontend and backend have solid test coverage  
+✅ **Mocked Dependencies**: Database, email service, and external APIs are mocked  
+✅ **Error Scenarios**: Tests cover validation errors, network failures, and edge cases  
+✅ **User Flows**: Complete end-to-end user interactions are tested  
+✅ **Security Testing**: Input validation, rate limiting, and security headers  
+✅ **Performance**: Tests run quickly with proper mocking and setup  
+
+### Running Tests
+
+**Quick Test Run:**
+```bash
+# Backend
+cd backend && npm test
+
+# Frontend  
+cd frontend && npm run test:run
+```
+
+**With Coverage:**
+```bash
+# Backend
+cd backend && npm run test:coverage
+
+# Frontend
+cd frontend && npm run test:coverage
+```
+
+**Watch Mode (Development):**
+```bash
+# Backend
+cd backend && npm run test:watch
+
+# Frontend
+cd frontend && npm test
+```
+
 ## 🤝 Contributing
 
 1. Fork this repo

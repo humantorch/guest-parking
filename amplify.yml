@@ -18,6 +18,9 @@ applications:
               fi
         build:
           commands:
+            - echo "🧪 Running frontend tests..."
+            - npm run test:run
+            - echo "🏗️ Building frontend..."
             - npm run build
       artifacts:
         baseDirectory: dist

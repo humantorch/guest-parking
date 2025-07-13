@@ -23,7 +23,6 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const ADMIN_PASSWORD = import.meta.env.VITE_REACT_APP_ADMIN_PASSWORD;
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
 // Helper to get the Friday of the weekend for a given date
@@ -43,6 +42,8 @@ function formatWeekendRange(fridayStr) {
 }
 
 export default function AdminPage() {
+  const ADMIN_PASSWORD = import.meta.env.VITE_REACT_APP_ADMIN_PASSWORD;
+  console.log('ADMIN_PASSWORD in AdminPage:', ADMIN_PASSWORD, typeof ADMIN_PASSWORD);
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const [bookings, setBookings] = useState([]);
@@ -52,7 +53,7 @@ export default function AdminPage() {
   const cardRefs = useRef({});
 
   const handleLogin = () => {
-    if (password === ADMIN_PASSWORD) {
+    if (String(password) === String(ADMIN_PASSWORD)) {
       setAuthenticated(true);
       setError('');
     } else {
@@ -255,6 +256,7 @@ export default function AdminPage() {
                         variant="destructive"
                         onClick={() => handleDeleteGroup(group.bookingIds)}
                         className="w-full py-2 text-base font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition"
+                        data-testid="delete-weekend-button"
                       >
                         Delete Full Weekend Booking
                       </Button>
@@ -271,6 +273,7 @@ export default function AdminPage() {
                         disabled={isBefore(parseISO(group.dates[0]), today)}
                         onClick={() => handleDeleteGroup(group.bookingIds)}
                         className="w-full py-2 text-base font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition"
+                        data-testid="delete-button"
                       >
                         Delete
                       </Button>
