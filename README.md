@@ -7,7 +7,6 @@
 [![Database](https://img.shields.io/badge/Database-PostgreSQL-blue?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Infrastructure](https://img.shields.io/badge/Infrastructure-Terraform-orange?style=flat-square&logo=hashicorp&logoColor=white)](https://www.hashicorp.com/en/products/terraform)
 [![Hosting](https://img.shields.io/badge/Hosting-Amplify_+_Lambda-yellow?style=flat-square)](https://aws.amazon.com)
-[![License](https://img.shields.io/badge/License-MIT-white?style=flat-square)](https://opensource.org/licenses/MIT)
 
 A full-stack web app that allows condo residents to book guest parking spots for single days or entire weekends, with a clean admin interface, email confirmations, and AWS-powered infrastructure.
 
