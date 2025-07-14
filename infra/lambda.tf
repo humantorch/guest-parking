@@ -54,7 +54,7 @@ resource "aws_lambda_function" "backend" {
   function_name = "guest-parking-backend"
   role          = aws_iam_role.lambda_exec_role.arn
   handler       = "lambda.handler"
-  runtime       = "nodejs18.x"
+  runtime       = "nodejs22.x"
 
   filename         = "backend.zip"
   source_code_hash = filebase64sha256("backend.zip")
