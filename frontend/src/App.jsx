@@ -101,6 +101,15 @@ export default function GuestParkingBookingApp() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleBookingTypeChange = (newType) => {
+    setBookingType(newType);
+    
+    // Clear selected spot if it's no longer available for the new booking type
+    if (selectedSpot && !availableSpots.includes(selectedSpot)) {
+      setSelectedSpot(null);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!selectedSpot) {
       toast.error('Please select a spot.');
@@ -306,7 +315,7 @@ export default function GuestParkingBookingApp() {
                 type="radio"
                 value="single"
                 checked={bookingType === 'single'}
-                onChange={() => setBookingType('single')}
+                onChange={() => handleBookingTypeChange('single')}
                 disabled={!(isFriday(selectedDate) || isSaturday(selectedDate) || isSunday(selectedDate))}
               />
               Only this day
@@ -316,7 +325,7 @@ export default function GuestParkingBookingApp() {
                 type="radio"
                 value="weekend"
                 checked={bookingType === 'weekend'}
-                onChange={() => setBookingType('weekend')}
+                onChange={() => handleBookingTypeChange('weekend')}
                 disabled={!(isFriday(selectedDate) || isSaturday(selectedDate) || isSunday(selectedDate))}
               />
               Full weekend (Fri–Sun)
