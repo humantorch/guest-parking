@@ -97,17 +97,19 @@ export default function GuestParkingBookingApp() {
     fetchAvailability(selectedDate, bookingType);
   }, [selectedDate, bookingType]);
 
+  // Clear selected spot if it's no longer available after availability updates
+  useEffect(() => {
+    if (selectedSpot && !availableSpots.includes(selectedSpot)) {
+      setSelectedSpot(null);
+    }
+  }, [availableSpots, selectedSpot]);
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleBookingTypeChange = (newType) => {
     setBookingType(newType);
-    
-    // Clear selected spot if it's no longer available for the new booking type
-    if (selectedSpot && !availableSpots.includes(selectedSpot)) {
-      setSelectedSpot(null);
-    }
   };
 
   const handleSubmit = async () => {
