@@ -4,7 +4,7 @@ const helmet = require('helmet');
 // Rate limiting for booking endpoints
 const bookingLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.DISABLE_RATE_LIMIT === 'true' ? 1000 : 5, // limit each IP to 5 booking requests per windowMs
+  max: process.env.DISABLE_RATE_LIMIT === 'true' ? 1000 : 50, // limit each IP to 50 booking requests per windowMs
   message: {
     error: 'Too many booking attempts from this IP, please try again later.',
     retryAfter: '15 minutes'
@@ -16,7 +16,7 @@ const bookingLimiter = rateLimit({
 // Rate limiting for admin endpoints
 const adminLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.DISABLE_RATE_LIMIT === 'true' ? 1000 : 10, // limit each IP to 10 admin requests per windowMs
+  max: process.env.DISABLE_RATE_LIMIT === 'true' ? 1000 : 100, // limit each IP to 100 admin requests per windowMs
   message: {
     error: 'Too many admin requests from this IP, please try again later.',
     retryAfter: '15 minutes'
@@ -28,7 +28,7 @@ const adminLimiter = rateLimit({
 // Rate limiting for availability checks
 const availabilityLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: process.env.DISABLE_RATE_LIMIT === 'true' ? 1000 : 30, // limit each IP to 30 availability checks per minute
+  max: process.env.DISABLE_RATE_LIMIT === 'true' ? 1000 : 200, // limit each IP to 200 availability checks per minute
   message: {
     error: 'Too many availability checks from this IP, please try again later.',
     retryAfter: '1 minute'
