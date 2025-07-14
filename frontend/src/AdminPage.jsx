@@ -303,6 +303,10 @@ export default function AdminPage() {
           ))}
         </div>
       </div>
+      {/* Footer Attribution */}
+      <footer className="w-full text-center text-xs text-gray-500 mt-8 mb-2 opacity-80">
+      Built with ❤️ by <a href="https://scottkosman.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-indigo-700">Scott Kosman</a> · <a href="https://github.com/humantorch/guest-parking" target="_blank" rel="noopener noreferrer" className="underline hover:text-indigo-700">source code on github</a>
+      </footer>
       <style>{`
         .admin-small-calendar-event, .rbc-event {
           font-size: 0.8rem !important;
