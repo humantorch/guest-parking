@@ -210,5 +210,65 @@ describe('GuestParkingBookingApp', () => {
         expect(spot1Button.className).toMatch(/ring-2|selected|bg-indigo/);
       });
     });
+
+    it('should clear selected spot if it becomes unavailable after booking type change', async () => {
+      // Start with all spots available
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ availableSpots: [1, 2, 3, 4, 5, 6, 7] })
+      });
+      renderApp();
+
+      // Select Spot 1
+      const spot1Button = screen.getByText('Spot 1');
+      fireEvent.click(spot1Button);
+      await waitFor(() => {
+        expect(spot1Button.className).toMatch(/bg-indigo/);
+      });
+
+      // Simulate switching to weekend booking, but Spot 1 is NOT available for the weekend
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ availableSpots: [2, 3, 4, 5, 6, 7] })
+      });
+
+      // Change booking type to weekend
+      fireEvent.click(screen.getByLabelText('Full weekend (Fri–Sun)'));
+
+      // Wait for effect
+      await waitFor(() => {
+        expect(spot1Button.className).not.toMatch(/bg-indigo/);
+      });
+    });
+
+    it('should keep selected spot if it is still available after booking type change', async () => {
+      // Start with all spots available
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ availableSpots: [1, 2, 3, 4, 5, 6, 7] })
+      });
+      renderApp();
+
+      // Select Spot 1
+      const spot1Button = screen.getByText('Spot 1');
+      fireEvent.click(spot1Button);
+      await waitFor(() => {
+        expect(spot1Button.className).toMatch(/bg-indigo/);
+      });
+
+      // Simulate switching to weekend booking, Spot 1 is still available
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ availableSpots: [1, 2, 3, 4, 5, 6, 7] })
+      });
+
+      // Change booking type to weekend
+      fireEvent.click(screen.getByLabelText('Full weekend (Fri–Sun)'));
+
+      // Wait for effect
+      await waitFor(() => {
+        expect(spot1Button.className).toMatch(/bg-indigo/);
+      });
+    });
   });
 }); 
