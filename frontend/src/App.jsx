@@ -6,7 +6,7 @@ import { isFriday, isSaturday, isSunday, startOfWeek, addDays, format } from 'da
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import toast, { Toaster } from 'react-hot-toast';
-import { CalendarDaysIcon, UserIcon, TruckIcon } from '@heroicons/react/24/outline';
+import { CalendarDaysIcon, UserIcon, TruckIcon, CheckIcon } from '@heroicons/react/24/outline';
 
 
 const TOTAL_SPOTS = 7;
@@ -29,6 +29,7 @@ export default function GuestParkingBookingApp() {
   const [availableSpots, setAvailableSpots] = useState([1, 2, 3, 4, 5, 6, 7]); // Initialize with all spots available
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingAvailability, setIsLoadingAvailability] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -40,49 +41,55 @@ export default function GuestParkingBookingApp() {
   });
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [message, setMessage] = useState('');
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
 
   const fetchAvailability = async (dateToCheck = selectedDate, bookingTypeToCheck = bookingType) => {
-    if (
-      bookingTypeToCheck === 'weekend' &&
-      [5, 6, 0].includes(dateToCheck.getDay())
-    ) {
-      // Calculate Friday of the weekend
-      let friday;
-      if (isFriday(dateToCheck)) friday = dateToCheck;
-      else if (isSaturday(dateToCheck)) friday = addDays(dateToCheck, -1);
-      else if (isSunday(dateToCheck)) friday = addDays(dateToCheck, -2);
-      const weekendDates = [friday, addDays(friday, 1), addDays(friday, 2)];
+    setIsLoadingAvailability(true);
+    try {
+      if (
+        bookingTypeToCheck === 'weekend' &&
+        [5, 6, 0].includes(dateToCheck.getDay())
+      ) {
+        // Calculate Friday of the weekend
+        let friday;
+        if (isFriday(dateToCheck)) friday = dateToCheck;
+        else if (isSaturday(dateToCheck)) friday = addDays(dateToCheck, -1);
+        else if (isSunday(dateToCheck)) friday = addDays(dateToCheck, -2);
+        const weekendDates = [friday, addDays(friday, 1), addDays(friday, 2)];
 
-      // Fetch availability for all three days
-      const spotSets = await Promise.all(
-        weekendDates.map(async (d) => {
+        // Fetch availability for all three days
+        const spotSets = await Promise.all(
+          weekendDates.map(async (d) => {
+            const res = await fetch(
+              `${API_BASE_URL}/api/bookings/availability?date=${format(d, 'yyyy-MM-dd')}`
+            );
+            const data = await res.json();
+            return data.availableSpots || [];
+          })
+        );
+        // Only include spots available on all three days
+        const availableSpots = [1, 2, 3, 4, 5, 6, 7].filter((spot) =>
+          spotSets.every((set) => set.includes(spot))
+        );
+        setAvailableSpots(availableSpots);
+      } else {
+        // Single day logic (as before)
+        try {
           const res = await fetch(
-            `${API_BASE_URL}/api/bookings/availability?date=${format(d, 'yyyy-MM-dd')}`
+            `${API_BASE_URL}/api/bookings/availability?date=${format(dateToCheck, 'yyyy-MM-dd')}`
           );
           const data = await res.json();
-          return data.availableSpots || [];
-        })
-      );
-      // Only include spots available on all three days
-      const availableSpots = [1, 2, 3, 4, 5, 6, 7].filter((spot) =>
-        spotSets.every((set) => set.includes(spot))
-      );
-      setAvailableSpots(availableSpots);
-    } else {
-      // Single day logic (as before)
-      try {
-        const res = await fetch(
-          `${API_BASE_URL}/api/bookings/availability?date=${format(dateToCheck, 'yyyy-MM-dd')}`
-        );
-        const data = await res.json();
-        if (res.ok) {
-          setAvailableSpots(data.availableSpots || []);
-        } else {
+          if (res.ok) {
+            setAvailableSpots(data.availableSpots || []);
+          } else {
+            setAvailableSpots([]);
+          }
+        } catch (err) {
           setAvailableSpots([]);
         }
-      } catch (err) {
-        setAvailableSpots([]);
       }
+    } finally {
+      setIsLoadingAvailability(false);
     }
   };
 
@@ -214,6 +221,7 @@ export default function GuestParkingBookingApp() {
     }
     if (allSuccess) {
       setBookingConfirmed(true);
+      setShowSuccessAnimation(true);
       toast.success(
         bookingType === 'weekend' && isWeekendDay
           ? 'Full weekend booking confirmed!'
@@ -230,6 +238,8 @@ export default function GuestParkingBookingApp() {
         vehicleType: '',
         licensePlate: '',
       });
+      // Hide animation after 3 seconds
+      setTimeout(() => setShowSuccessAnimation(false), 3000);
     }
     setIsSubmitting(false);
   };
@@ -275,8 +285,15 @@ export default function GuestParkingBookingApp() {
             onChange={(date) => setSelectedDate(date)}
             minDate={new Date()}
             dateFormat="yyyy-MM-dd"
-            className="border p-2 rounded w-full focus:ring-2 focus:ring-indigo-300"
+            className="border p-2 rounded w-full focus:ring-2 focus:ring-indigo-300 bg-white"
             placeholderText="Select a date"
+            dayClassName={(date) => {
+              const day = date.getDay();
+              if ([5, 6, 0].includes(day)) {
+                return 'bg-blue-50 text-blue-700 font-semibold';
+              }
+              return '';
+            }}
           />
           <div className="text-sm text-gray-600 mt-1">{weekendText}</div>
         </div>
@@ -312,6 +329,9 @@ export default function GuestParkingBookingApp() {
           <div className="flex items-center gap-2 mb-2">
             <TruckIcon className="w-5 h-5 text-indigo-500" />
             <span className="font-semibold text-lg text-indigo-800">Select Spot</span>
+            {isLoadingAvailability && (
+              <span className="text-sm text-gray-500 ml-2">Loading availability...</span>
+            )}
           </div>
           <div className="flex flex-col gap-4">
             {/* P1 Group */}
@@ -328,8 +348,8 @@ export default function GuestParkingBookingApp() {
                       onClick={() => isAvailable && setSelectedSpot(spot)}
                       disabled={!isAvailable}
                       className={
-                        `${isAvailable ? 'border-green-400 text-green-700 hover:bg-green-50' : 'border-gray-300 text-gray-400 cursor-not-allowed'} ` +
-                        `${isSelected ? 'ring-2 ring-indigo-400' : ''} px-4 py-2 rounded-lg font-semibold transition`
+                        `${isAvailable ? (isSelected ? 'bg-indigo-600 text-white border-2 border-indigo-700 shadow-lg shadow-[0_0_0_4px_rgba(99,102,241,0.3)]' : 'border-2 border-green-400 text-green-700 hover:bg-green-50 hover:shadow-md') : 'border-2 border-gray-300 text-gray-400 cursor-not-allowed'} ` +
+                        `${isSelected ? 'ring-2 ring-indigo-400' : ''} px-4 py-2 rounded-lg font-semibold transition-all duration-200`
                       }
                     >
                       Spot {spot}
@@ -352,8 +372,8 @@ export default function GuestParkingBookingApp() {
                       onClick={() => isAvailable && setSelectedSpot(spot)}
                       disabled={!isAvailable}
                       className={
-                        `${isAvailable ? 'border-green-400 text-green-700 hover:bg-green-50' : 'border-gray-300 text-gray-400 cursor-not-allowed'} ` +
-                        `${isSelected ? 'ring-2 ring-indigo-400' : ''} px-4 py-2 rounded-lg font-semibold transition`
+                        `${isAvailable ? (isSelected ? 'bg-indigo-600 text-white border-2 border-indigo-700 shadow-lg shadow-[0_0_0_4px_rgba(99,102,241,0.3)]' : 'border-2 border-green-400 text-green-700 hover:bg-green-50 hover:shadow-md') : 'border-2 border-gray-300 text-gray-400 cursor-not-allowed'} ` +
+                        `${isSelected ? 'ring-2 ring-indigo-400' : ''} px-4 py-2 rounded-lg font-semibold transition-all duration-200`
                       }
                     >
                       Spot {spot}
@@ -371,7 +391,8 @@ export default function GuestParkingBookingApp() {
             <UserIcon className="w-5 h-5 text-indigo-500" />
             <span className="font-semibold text-lg text-indigo-800">Guest Information</span>
           </div>
-          <div className="mb-2 text-sm text-red-600 font-semibold">
+          <div className="mb-2 text-sm text-red-600 font-semibold flex items-center gap-1">
+            <span className="text-red-500">⚠️</span>
             All fields are required.
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -389,9 +410,13 @@ export default function GuestParkingBookingApp() {
         <Button
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="w-full py-3 text-lg font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition"
+          className={`w-full py-3 text-lg font-bold rounded-xl shadow-md transition ${
+            showSuccessAnimation 
+              ? 'bg-green-600 hover:bg-green-700 animate-pulse' 
+              : 'bg-indigo-600 hover:bg-indigo-700'
+          } text-white`}
         >
-          {isSubmitting ? 'Booking...' : 'Book Spot'}
+          {isSubmitting ? 'Booking...' : showSuccessAnimation ? '✅ Booked!' : 'Book Spot'}
         </Button>
       </div>
     </div>
