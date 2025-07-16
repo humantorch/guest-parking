@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Keep Supabase awake via call to /availability
-        run: curl -sSf https://aso4mwrw90.execute-api.us-east-1.amazonaws.com/api/bookings/availability?weekend=2025-07-18
+        run: curl -sSf https://aso4mwrw90.execute-api.us-east-1.amazonaws.com/api/bookings/availability?date=2025-07-18
